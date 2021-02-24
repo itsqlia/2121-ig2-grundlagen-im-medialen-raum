@@ -1,5 +1,3 @@
-npm install
-
 <b>client 1:</b> Install + use
 node client1.js
 
