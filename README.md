@@ -1,6 +1,6 @@
 <b>client 1:</b> Install + use<br>
-npm install
-node client1.js<br><br>
+npm install<br>
+node client1.js<br>
 
 http://localhost:3000<br>
 button click changes the background on client 2
