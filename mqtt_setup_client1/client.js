@@ -10,14 +10,17 @@ var mqtt = require('mqtt');
 var client = mqtt.connect("mqtt://mqtt.hfg.design:1883/someDomain");
 
 client.on('connect', function () {
-    console.log("mqtt connected")
-    client.subscribe('eventTrigger', function (err) {
-    })
+    console.log("mqtt connected");
+    client.subscribe('serverEvent', function (err) {});
 })
 
-client.on('message', function (topic, message, third) {
-    console.log("Topic: " + topic + ", Message: " + message.toString());
-    io.emit('eventTrigger', message.toString(), Math.random());
+// Incoming messages from mqtt broker
+client.on('message', function (topic, message) {
+    console.log("Topic: " + topic + ", Message: " + message);
+    // parse message to array
+    var args = JSON.parse(message);
+    // Sending message to browser script
+    io.emit('serverEvent', ...args);
 })
 
 // Listen for requests
@@ -29,9 +32,17 @@ var server = app.listen(app.get('port'), function () {
 // Loading socket.io
 var io = require('socket.io').listen(server);
 
-
 io.sockets.on('connection', function (socket) {
     // When the client connects, they are sent a message
     socket.emit('connected', 'You are connected!'); 
     console.log("User connected!");
+
+    // Receiving message from browser script 
+    socket.on('serverEvent', function () {
+        // Put all arguments in an array and stringify it
+        var args = JSON.stringify([...arguments]);
+        // Publish to mqtt
+        console.log('Publish to mqtt:', args);
+        client.publish("serverEvent", args);
+    }); 
 });
