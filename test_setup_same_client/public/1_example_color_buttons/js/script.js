@@ -4,11 +4,12 @@ socket.on('connected', function (msg) {
     console.log(msg);
 });
 
-// Sending a userID will help all connected users to know where the message came from
-let myUserID = Math.round(Math.random() * 1000000);
+// Sending a userID will help to know if the message came from me or from others
+let myUserID = Math.random().toString(36).substr(2, 9).toUpperCase();
 
 
-// Your script starts here ---------------------------------------
+// Your script starts here ------------------------------------------------------
+
 
 let body = document.getElementById("body");
 var buttons = document.getElementsByClassName("button")
