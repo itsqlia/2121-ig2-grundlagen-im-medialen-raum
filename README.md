@@ -14,6 +14,13 @@ npm install
 npm run start
 ```
 
+Instead of `npm run start` it might be useful for testing to start two or more clients on different ports. Then:
+```bash
+node client.js 3001
+```
+(or any other port number you think is good)
+
+
 In your browser go to one of the examples, e.g.:
 
 ```

@@ -9,6 +9,8 @@ app.use('/', express.static(__dirname + '/public'));
 var mqtt = require('mqtt');
 var client = mqtt.connect("mqtt://mqtt.hfg.design:1883/someDomain");
 
+var userID = Math.random().toString(36).substr(2, 9).toUpperCase();
+
 client.on('connect', function () {
     console.log("mqtt connected");
     client.subscribe('serverEvent', function (err) {});
@@ -19,8 +21,16 @@ client.on('message', function (topic, message) {
     console.log("Incoming from mqtt: " + message);
     // parse message to array
     var args = JSON.parse(message);
-    // Sending message to browser script
+    // first argument of the message is the sender id
+    var senderID = args.shift();
+    // Sending message to browser script, no matter if the sender was me or someone else
     io.emit('serverEvent', ...args);
+    // Additionally create different events for messages from me and others
+    if (senderID == userID) {
+        io.emit('localEvent', ...args);
+    } else {
+        io.emit('remoteEvent', ...args);
+    }
 })
 
 // Listen for requests
@@ -39,8 +49,8 @@ io.sockets.on('connection', function (socket) {
 
     // Receiving message from browser script 
     socket.on('serverEvent', function () {
-        // Put all arguments in an array and stringify it
-        var args = JSON.stringify([...arguments]);
+        // Put userID and all arguments in an array and stringify it
+        var args = JSON.stringify([userID, ...arguments]);
         // Publish to mqtt
         console.log('Publishing to mqtt:', args);
         client.publish("serverEvent", args);

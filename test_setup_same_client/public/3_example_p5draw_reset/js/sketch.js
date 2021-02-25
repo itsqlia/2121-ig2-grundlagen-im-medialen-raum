@@ -1,8 +1,8 @@
 // Connecting to server. Don't touch this :-) 
 let socket = io();
 
-// Sending a userID will help to know if the message came from me or from others
-let myUserID = Math.random().toString(36).substr(2, 9).toUpperCase();
+// In some cases it might be good to have a user name
+let userName = "Hartmut";
 
 
 // Your script starts here ------------------------------------------------------
@@ -20,39 +20,47 @@ function draw() {
 
 function mouseDragged() {
     // Sending an event 
-    socket.emit('serverEvent', {user:myUserID, type:"draw", x:mouseX, y:mouseY});
+    socket.emit('serverEvent', {type:"draw", x:mouseX, y:mouseY});
 }
 
 function keyPressed() {
     if (key == " ") {
-        socket.emit('serverEvent', {user:myUserID, type:"reset"});
+        socket.emit('serverEvent', {type:"reset"});
     }
 }
 
 // Event when connecting 
 socket.on('connected', function (msg) {
     console.log(msg);
-    socket.emit('serverEvent', {user:myUserID, type:"reset"});
+    socket.emit('serverEvent', {type:"reset"});
 });
 
 
 // Incoming events 
 socket.on('serverEvent', function (message) {
-    //console.log("Incoming event: ", user, x, y);
-    
-    if (message.type == "draw") {
-        if (message.user == myUserID) { 
-          fill(128, 80);
-        } else {
-          fill(255, 128, 0, 100);
-        }
-
-        circle(message.x, message.y, 20);
-    }
+    // console.log("Incoming event: ", user, x, y);
 
     if (message.type == "reset") {
         background(255);
     }
-
 });
 
+// Event type "localEvent" occurs when something was send out by this script 
+socket.on('localEvent', function (message) {
+    // console.log("Incoming event from me: ", message);
+
+    if (message.type == "draw") {
+        fill(128, 80);
+        circle(message.x, message.y, 20);
+    }
+});
+
+// Event type "remoteEvent" occurs when something was send out by someone elses script 
+socket.on('remoteEvent', function (message) {
+    // console.log("Incoming event from outside: ", message);
+
+    if (message.type == "draw") {
+        fill(0, 128, 255, 80);
+        circle(message.x, message.y, 20);
+    }
+});
