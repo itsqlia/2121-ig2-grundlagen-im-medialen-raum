@@ -1,4 +1,4 @@
-# Browser-MQTT-Comunication
+# Browser-MQTT-Communication
 
 This setup allows sending messages through an mqtt broker from web browsers to web browsers.
 
