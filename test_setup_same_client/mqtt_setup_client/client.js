@@ -16,7 +16,7 @@ client.on('connect', function () {
 
 // Incoming messages from mqtt broker
 client.on('message', function (topic, message) {
-    console.log("Topic: " + topic + ", Message: " + message);
+    console.log("Incoming from mqtt: " + message);
     // parse message to array
     var args = JSON.parse(message);
     // Sending message to browser script
@@ -42,7 +42,7 @@ io.sockets.on('connection', function (socket) {
         // Put all arguments in an array and stringify it
         var args = JSON.stringify([...arguments]);
         // Publish to mqtt
-        console.log('Publish to mqtt:', args);
+        console.log('Publishing to mqtt:', args);
         client.publish("serverEvent", args);
     }); 
 });
