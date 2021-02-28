@@ -11,6 +11,7 @@ var client = mqtt.connect("mqtt://mqtt.hfg.design:1883/someDomain");
 
 var userID = Math.random().toString(36).substr(2, 9).toUpperCase();
 var connectionTimestamp = Date.now();
+
 var usersConnected = [];
 // For collecting users through whosThereEvent and imHereEvent
 var usersCollect = [];
@@ -52,12 +53,14 @@ client.on('message', function (topic, message) {
 
     if (topic == "whosThereEvent") {
         // console.log("Incoming from mqtt: " + topic + ", " + message);
+
+        // Start collecting all connected users 
         usersCollect = [];
         usersCollectPending = true;
         client.publish("imHereEvent", JSON.stringify({user:userID, since:connectionTimestamp}));
         setTimeout(function() {
             usersCollectPending = false;
-            // sort users on connectionTimestamp to keep order of users constant
+            // Sort users on connectionTimestamp to keep order of users constant
             usersCollect.sort(function(a, b) {return (a.since < b.since) ? -1 : (a.since > b.since) ? 1 : 0});
             if (JSON.stringify(usersConnected) != JSON.stringify(usersCollect)) {
                 console.log('Users changed!!');
