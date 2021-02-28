@@ -7,7 +7,7 @@ app.set('port', port);
 app.use('/', express.static(__dirname + '/public'));
 
 var mqtt = require('mqtt');
-var client = mqtt.connect("mqtt://mqtt.hfg.design:1883/someDomain");
+var client = mqtt.connect("mqtt://mqtt.hfg.design:1883/teamplayer/yourTopic");
 
 var userID = Math.random().toString(36).substr(2, 9).toUpperCase();
 var connectionTimestamp = Date.now();
@@ -57,7 +57,7 @@ client.on('message', function (topic, message) {
         // Start collecting all connected users 
         usersCollect = [];
         usersCollectPending = true;
-        client.publish("imHereEvent", JSON.stringify({user:userID, since:connectionTimestamp}));
+        client.publish("imHereEvent", JSON.stringify({id:userID, since:connectionTimestamp}));
         setTimeout(function() {
             usersCollectPending = false;
             // Sort users on connectionTimestamp to keep order of users constant
@@ -78,8 +78,8 @@ client.on('message', function (topic, message) {
     if (topic == "imHereEvent") {
         // console.log("Incoming from mqtt: " + topic + ", " + message);
         message = JSON.parse(message);
-        // console.log('**** user ' + message.user + ' is here since ' + message.since);
-        var foundUser = usersCollect.find(function(el) {return el.user == message.user});
+        // console.log('**** user ' + message.id + ' is here since ' + message.since);
+        var foundUser = usersCollect.find(function(el) {return el.id == message.id});
         if (!foundUser) usersCollect.push(message);
     }
 
