@@ -10,27 +10,75 @@ var mqtt = require('mqtt');
 var client = mqtt.connect("mqtt://mqtt.hfg.design:1883/someDomain");
 
 var userID = Math.random().toString(36).substr(2, 9).toUpperCase();
+var connectionTimestamp = Date.now();
+var usersConnected = [];
+// For collecting users through whosThereEvent and imHereEvent
+var usersCollect = [];
+var usersCollectPending = false;
 
 client.on('connect', function () {
-    console.log("mqtt connected");
+    console.log("mqtt client connected");
     client.subscribe('serverEvent', function (err) {});
+    client.subscribe('whosThereEvent', function (err) {});
+    client.subscribe('imHereEvent', function (err) {});
+    // ask for users every 2 seconds to know if someone disconnected
+    setInterval(function() {
+        if (!usersCollectPending) {
+            client.publish("whosThereEvent", userID);
+        }
+    }, 2000);
 })
+
+
 
 // Incoming messages from mqtt broker
 client.on('message', function (topic, message) {
-    console.log("Incoming from mqtt: " + message);
-    // parse message to array
-    var args = JSON.parse(message);
-    // first argument of the message is the sender id
-    var senderID = args.shift();
-    // Sending message to browser script, no matter if the sender was me or someone else
-    io.emit('serverEvent', ...args);
-    // Additionally create different events for messages from me and others
-    if (senderID == userID) {
-        io.emit('localEvent', ...args);
-    } else {
-        io.emit('remoteEvent', ...args);
+
+    if (topic == "serverEvent") {
+        console.log("Incoming from mqtt: " + topic + ", " + message);
+        // parse message to array
+        var args = JSON.parse(message);
+        // first argument of the message is the sender id
+        var senderID = args.shift();
+        // Sending message to browser script, no matter if the sender was me or someone else
+        io.emit('serverEvent', ...args);
+        // Additionally create different events for messages from me and others
+        if (senderID == userID) {
+            io.emit('localEvent', ...args);
+        } else {
+            io.emit('remoteEvent', ...args);
+        }
     }
+
+    if (topic == "whosThereEvent") {
+        // console.log("Incoming from mqtt: " + topic + ", " + message);
+        usersCollect = [];
+        usersCollectPending = true;
+        client.publish("imHereEvent", JSON.stringify({user:userID, since:connectionTimestamp}));
+        setTimeout(function() {
+            usersCollectPending = false;
+            // sort users on connectionTimestamp to keep order of users constant
+            usersCollect.sort(function(a, b) {return (a.since < b.since) ? -1 : (a.since > b.since) ? 1 : 0});
+            if (JSON.stringify(usersConnected) != JSON.stringify(usersCollect)) {
+                console.log('Users changed!!');
+                usersConnected = [...usersCollect];
+                console.log('**** new users list:');
+                for (var i = 0; i < usersConnected.length; i++) {
+                    console.log(usersConnected[i]);
+                }
+                io.emit('newUsersEvent', userID, usersConnected);
+            }
+
+        }, 500);
+    }
+
+    if (topic == "imHereEvent") {
+        // console.log("Incoming from mqtt: " + topic + ", " + message);
+        message = JSON.parse(message);
+        // console.log('**** user ' + message.user + ' is here since ' + message.since);
+        usersCollect.push(message);
+    }
+
 })
 
 // Listen for requests
@@ -47,6 +95,11 @@ io.sockets.on('connection', function (socket) {
     socket.emit('connected', 'You are connected!'); 
     console.log("User connected!");
 
+    // as soon as the browser script is connected, ask for other connected users...
+    client.publish("whosThereEvent", userID);
+    // ... and send the actual list (useful if just the browser script was relaoded)
+    io.emit('newUsersEvent', userID, usersConnected);
+
     // Receiving message from browser script 
     socket.on('serverEvent', function () {
         // Put userID and all arguments in an array and stringify it
@@ -55,4 +108,11 @@ io.sockets.on('connection', function (socket) {
         console.log('Publishing to mqtt:', args);
         client.publish("serverEvent", args);
     }); 
+
+    socket.on('whosThereEvent', function () {
+        if (!usersCollectPending) {
+            client.publish("whosThereEvent", userID);
+        }
+    }); 
+
 });
