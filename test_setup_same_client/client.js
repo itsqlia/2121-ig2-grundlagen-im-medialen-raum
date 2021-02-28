@@ -76,7 +76,8 @@ client.on('message', function (topic, message) {
         // console.log("Incoming from mqtt: " + topic + ", " + message);
         message = JSON.parse(message);
         // console.log('**** user ' + message.user + ' is here since ' + message.since);
-        usersCollect.push(message);
+        var foundUser = usersCollect.find(function(el) {return el.user == message.user});
+        if (!foundUser) usersCollect.push(message);
     }
 
 })
