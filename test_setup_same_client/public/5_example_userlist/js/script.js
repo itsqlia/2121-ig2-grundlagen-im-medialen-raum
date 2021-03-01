@@ -15,9 +15,10 @@ socket.on('serverEvent', function (message) {
     console.log("Incoming event: ", message);
 });
 
-socket.on('newUsersEvent', function (myID, userList) {
+socket.on('newUsersEvent', function (myID, myIndex, userList) {
     console.log("New users event: ");
     console.log("That's me: " + myID);
+    console.log("My index in the list: " + myIndex);
     console.log("That's the new users: ");
     console.log(userList);
 

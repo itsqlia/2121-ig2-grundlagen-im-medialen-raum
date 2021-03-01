@@ -10,6 +10,7 @@ var mqtt = require('mqtt');
 var client = mqtt.connect("mqtt://mqtt.hfg.design:1883/teamplayer/yourTopic");
 
 var userID = Math.random().toString(36).substr(2, 9).toUpperCase();
+var userIndex;
 var connectionTimestamp = Date.now();
 
 var usersConnected = [];
@@ -69,7 +70,8 @@ client.on('message', function (topic, message) {
                 for (var i = 0; i < usersConnected.length; i++) {
                     console.log(usersConnected[i]);
                 }
-                io.emit('newUsersEvent', userID, usersConnected);
+                userIndex = usersConnected.findIndex(el => el.id == userID);
+                io.emit('newUsersEvent', userID, userIndex, usersConnected);
             }
 
         }, 500);
@@ -102,7 +104,7 @@ io.sockets.on('connection', function (socket) {
     // as soon as the browser script is connected, ask for other connected users...
     client.publish("whosThereEvent", userID);
     // ... and send the actual list (useful if just the browser script was relaoded)
-    io.emit('newUsersEvent', userID, usersConnected);
+    io.emit('newUsersEvent', userID, userIndex, usersConnected);
 
     // Receiving message from browser script 
     socket.on('serverEvent', function () {
