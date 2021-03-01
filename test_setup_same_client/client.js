@@ -6,10 +6,15 @@ var port = process.argv[2] || 3001;
 app.set('port', port);
 app.use('/', express.static(__dirname + '/public'));
 
+// get topic from arguments
+var myTopic = process.argv[3] || "teamplayer";
+console.log("You'll listen to topic: " + myTopic);
+
 var mqtt = require('mqtt');
-var client = mqtt.connect("mqtt://mqtt.hfg.design:1883/teamplayer/yourTopic");
+var client = mqtt.connect("mqtt://mqtt.hfg.design:1883/");
 
 var userID = Math.random().toString(36).substr(2, 9).toUpperCase();
+console.log("You are user: " + userID);
 var userIndex;
 var connectionTimestamp = Date.now();
 
@@ -20,13 +25,13 @@ var usersCollectPending = false;
 
 client.on('connect', function () {
     console.log("mqtt client connected");
-    client.subscribe('serverEvent', function (err) {});
-    client.subscribe('whosThereEvent', function (err) {});
-    client.subscribe('imHereEvent', function (err) {});
+    client.subscribe(myTopic + '/serverEvent', function (err) {});
+    client.subscribe(myTopic + '/whosThereEvent', function (err) {});
+    client.subscribe(myTopic + '/imHereEvent', function (err) {});
     // ask for users every 2 seconds to know if someone disconnected
     setInterval(function() {
         if (!usersCollectPending) {
-            client.publish("whosThereEvent", userID);
+            client.publish(myTopic + '/whosThereEvent', userID);
         }
     }, 2000);
 })
@@ -36,7 +41,7 @@ client.on('connect', function () {
 // Incoming messages from mqtt broker
 client.on('message', function (topic, message) {
 
-    if (topic == "serverEvent") {
+    if (topic == myTopic + '/serverEvent"') {
         console.log("Incoming from mqtt: " + topic + ", " + message);
         // parse message to array
         var args = JSON.parse(message);
@@ -52,13 +57,14 @@ client.on('message', function (topic, message) {
         }
     }
 
-    if (topic == "whosThereEvent") {
+    if (topic == myTopic + '/whosThereEvent') {
         // console.log("Incoming from mqtt: " + topic + ", " + message);
 
         // Start collecting all connected users 
         usersCollect = [];
         usersCollectPending = true;
-        client.publish("imHereEvent", JSON.stringify({id:userID, since:connectionTimestamp}));
+
+        if (process.argv[4] != "invisible") client.publish(myTopic + '/imHereEvent', JSON.stringify({id:userID, since:connectionTimestamp}));
         setTimeout(function() {
             usersCollectPending = false;
             // Sort users on connectionTimestamp to keep order of users constant
@@ -77,7 +83,7 @@ client.on('message', function (topic, message) {
         }, 500);
     }
 
-    if (topic == "imHereEvent") {
+    if (topic == myTopic + '/imHereEvent') {
         // console.log("Incoming from mqtt: " + topic + ", " + message);
         message = JSON.parse(message);
         // console.log('**** user ' + message.id + ' is here since ' + message.since);
@@ -102,7 +108,7 @@ io.sockets.on('connection', function (socket) {
     console.log("User connected!");
 
     // as soon as the browser script is connected, ask for other connected users...
-    client.publish("whosThereEvent", userID);
+    client.publish(myTopic + '/whosThereEvent', userID);
     // ... and send the actual list (useful if just the browser script was relaoded)
     io.emit('newUsersEvent', userID, userIndex, usersConnected);
 
@@ -112,12 +118,13 @@ io.sockets.on('connection', function (socket) {
         var args = JSON.stringify([userID, ...arguments]);
         // Publish to mqtt
         console.log('Publishing to mqtt:', args);
-        client.publish("serverEvent", args);
+        client.publish(myTopic + '/serverEvent', args);
     }); 
 
+    // The browser script can trigger a whosThereEvent. Propably not necessary to use.
     socket.on('whosThereEvent', function () {
         if (!usersCollectPending) {
-            client.publish("whosThereEvent", userID);
+            client.publish(myTopic + '/whosThereEvent', userID);
         }
     }); 
 
