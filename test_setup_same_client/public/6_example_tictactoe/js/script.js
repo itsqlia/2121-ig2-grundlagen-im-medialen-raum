@@ -18,6 +18,7 @@ for (let i = 0; i < gridSize*gridSize; i++) {
 
 
 $('.cell').click(function() {
+    console.log(myPlayerIndex)
     if (whosTurn == myPlayerIndex && $(this).hasClass("empty")) {
         // console.log(this);
         socket.emit('serverEvent', {type:"played", playerIndex:myPlayerIndex, cellIndex:$(this).index()});
