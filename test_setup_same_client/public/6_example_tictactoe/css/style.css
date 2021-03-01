@@ -30,9 +30,9 @@ body {
 
 .wrapper {
     display: grid;
-    grid-template-columns: repeat(4, 80px);
-    grid-gap: 10px;
-    grid-auto-rows: minmax(80px, auto);
+    grid-template-columns: repeat(4, 50px);
+    grid-gap: 5px;
+    grid-auto-rows: minmax(50px, auto);
 }
 
 .cell {

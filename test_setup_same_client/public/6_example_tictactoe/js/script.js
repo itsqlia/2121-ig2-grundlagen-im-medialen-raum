@@ -9,6 +9,13 @@ let playerColors = ['#f80', '#08f', '#80f', '#0f8', '#8f0', '#f08']
 let playerCount = 0;
 let whosTurn = 0;
 
+let gridSize = 8;
+$('.wrapper').children().remove();
+$('.wrapper').css("grid-template-columns", "repeat(" + gridSize + ", 50px)");
+for (let i = 0; i < gridSize*gridSize; i++) {
+    $('.wrapper').append('<div class="cell empty"></div>');
+}
+
 
 $('.cell').click(function() {
     if (whosTurn == myPlayerIndex && $(this).hasClass("empty")) {
@@ -69,7 +76,7 @@ function updateStatus() {
     if (whosTurn == myPlayerIndex) {
         $('#turn-status').html("It's your turn.");
     } else {
-        $('#turn-status').html("Waiting for player " + whosTurn + ".");        
+        $('#turn-status').html("Waiting for player " + (whosTurn+1) + ".");        
     }
 }
 
