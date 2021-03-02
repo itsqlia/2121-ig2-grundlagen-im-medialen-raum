@@ -7,8 +7,8 @@ app.set('port', port);
 app.use('/', express.static(__dirname + '/public'));
 
 // get topic from arguments
+console.log(process.argv[3]);
 var myTopic = process.argv[3] || "teamplayer";
-console.log("You'll listen to topic: " + myTopic);
 
 var mqtt = require('mqtt');
 var client = mqtt.connect("mqtt://mqtt.hfg.design:1883/");
