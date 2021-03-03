@@ -33,6 +33,22 @@ body {
     padding-right: 50px;
 }
 
+.wrapper .cell {
+    line-height: 42px;
+    font-size: 40px; 
+    text-align: center;
+}
+
+.wrapper .cell.shotDown {
+    line-height: 38px;
+    font-size: 70px; 
+    text-align: center;
+}
+
+.wrapper .cell.shotShip:after {
+    content: '\d7';
+}
+
 .wrapper .cell.set {
     background-color: green;
 }
@@ -57,6 +73,7 @@ body {
 
 .wrapperShip .cell {
     opacity: 0.5;
+    
 }
 
 .wrapperShip .cell.active,  .wrapperShip .cell.ready {

@@ -9,6 +9,8 @@ let playerColors = ['#f80', '#08f', '#80f', '#0f8', '#8f0', '#f08']
 let playerCount = 0;
 let whosTurn = 0;
 
+let shipSetCount = 0;
+
 let shipCounter = 0;
 let shipNumber = 0;
 
@@ -19,36 +21,38 @@ for (let i = 0; i < gridSize * gridSize; i++) {
     $('.wrapper').append('<div class="cell empty"></div>');
 }
 
-let setArray = []
+let setArray = [];
 let arrayFilter = [];
+let allShipsArray = [];
+let allPlayerShipsArray = [];
 
 $('.ship4').click(function () {
-    $('.wrapperShip .cell').removeClass('active');
-    $('.ship4').addClass('active');
+    $('.wrapperShip .cell').not(".ready").css("background-color", "white");
+    $('.ship4').css("background-color", playerColors[myPlayerIndex]);
     setArray = ["start"];
     shipCounter = 4;
     shipNumber = 4;
 });
 
 $('.ship3').click(function () {
-    $('.wrapperShip .cell').removeClass('active');
-    $('.ship3').addClass('active');
+    $('.wrapperShip .cell').not(".ready").css("background-color", "white");
+    $('.ship3').css("background-color", playerColors[myPlayerIndex]);
     setArray = ["start"];
     shipCounter = 3;
     shipNumber = 3;
 });
 
 $('.ship2').click(function () {
-    $('.wrapperShip .cell').removeClass('active');
-    $('.ship2').addClass('active');
+    $('.wrapperShip .cell').not(".ready").css("background-color", "white");
+    $('.ship2').css("background-color", playerColors[myPlayerIndex]);
     setArray = ["start"];
     shipCounter = 2;
     shipNumber = 2;
 });
 
 $('.ship1').click(function () {
-    $('.wrapperShip .cell').removeClass('active');
-    $('.ship1').addClass('active');
+    $('.wrapperShip .cell').not(".ready").css("background-color", "white");
+    $('.ship1').css("background-color", playerColors[myPlayerIndex]);
     setArray = ["start"];
     shipCounter = 1;
     shipNumber = 1;
@@ -58,7 +62,14 @@ $('.ship1').click(function () {
 $('.wrapper .cell').click(function () {
     if (shipCounter > 0) {
         checkPosition($(this));
-    } 
+    }
+
+    if (allPlayerShipsArray.length == playerCount) {
+        if (whosTurn == myPlayerIndex && $(this).hasClass("empty")) {
+            socket.emit('serverEvent', { type: "played", playerIndex: myPlayerIndex, cellIndex: $(this).index()});
+        }
+    }
+
 });
 
 function checkPosition(that) {
@@ -88,24 +99,28 @@ function checkPosition(that) {
         }
 
         if (arrayFilter.length != 0) {
-            that.addClass('set');
+            that.css("background-color", playerColors[myPlayerIndex]);
             shipCounter--;
             setArray.push(that.index());
+            allShipsArray.push(that.index());
         }
     } else {
         setArray = [];
-        that.addClass('set');
+        that.css("background-color", playerColors[myPlayerIndex]);
         shipCounter--;
         setArray.push(that.index());
+        allShipsArray.push(that.index());
     }
 
     if (shipCounter == 0) {
-        $('.ship'+shipNumber).addClass('ready');
-    } 
+        $('.ship' + shipNumber).addClass('ready');
+        if ($(".wrapperShip .cell").not(".ready").length == 0) {
+            socket.emit('serverEvent', { type: "shipSet", playerIndex: myPlayerIndex, allShipsArray: allShipsArray });
+        }
+    }
+
 
 }
-
-
 
 // Incoming events 
 socket.on('connected', function (msg) {
@@ -123,14 +138,54 @@ socket.on('serverEvent', function (message) {
     }
 
     if (message.type == "played") {
-        let cell = $('.wrapper').children()[message.cellIndex];
-        cell = $(cell);
-        cell.removeClass("empty");
-        cell.css("background-color", playerColors[message.playerIndex]);
+        if (whosTurn == myPlayerIndex) {
+            console.log("player")
+            let cell = $('.wrapper').children()[message.cellIndex];
+            cell = $(cell);
+            cell.removeClass("empty");
+            cell.addClass('shotShip');
+        } else {
+            let filterShot = allPlayerShipsArray.filter(function (row) {
+                return row.includes(message.cellIndex);
+            });
+
+            if(filterShot.length > 0) {
+                socket.emit('serverEvent', { type: "shipShotDown", playerIndex: whosTurn, cellIndex: message.cellIndex, hitPlayerIndex: myPlayerIndex });
+            }
+        }
+
         whosTurn++;
         if (whosTurn >= playerCount) {
             whosTurn = 0;
         }
+        updateStatus();
+    }
+
+    if (message.type == "shipShotDown") {
+        if (message.playerIndex == myPlayerIndex) {
+            let cell = $('.wrapper').children()[message.cellIndex];
+            cell = $(cell);
+            cell.addClass('shotDown');
+            removeElement(allPlayerShipsArray[message.hitPlayerIndex], message.cellIndex);
+            console.log(allPlayerShipsArray[message.hitPlayerIndex])
+            if(allPlayerShipsArray[message.hitPlayerIndex].length == 0) {
+                socket.emit('serverEvent', { type: "winner", winnerIndex: message.playerIndex });
+            }
+        }
+    }
+
+    if (message.type == "winner") {
+        if (message.winnerIndex == myPlayerIndex) {
+            $('#play-status').html("Gratulations, you are the winner.");
+        } else {
+            $('#play-status').html("Sorry, you are the looser.");
+        }
+    }
+
+
+    if (message.type == "shipSet") {
+        allPlayerShipsArray[message.playerIndex] = message.allShipsArray;
+        shipSetCount++;
         updateStatus();
     }
 
@@ -152,13 +207,24 @@ socket.on('newUsersEvent', function (myID, myIndex, userList) {
 function updateStatus() {
     $('#player-status').html("There are " + playerCount + " players connected");
 
+    $('.wrapper .cell').css("color", playerColors[myPlayerIndex]);
+
     $('#playcolor').css("background-color", playerColors[myPlayerIndex]);
     $('body').css("background-color", playerColors[myPlayerIndex] + "4"); // background color like playing color but less opacity
 
+    if (shipSetCount == playerCount) {
+        $('#play-status').html("All players did set their ships.");
+    }
     if (whosTurn == myPlayerIndex) {
-        $('#turn-status').html("It's your turn.");
+        $('#play-status').html("It's your turn.");
     } else {
-        $('#turn-status').html("Waiting for player " + (whosTurn + 1) + ".");
+        $('#play-status').html("Waiting for player " + (whosTurn + 1) + ".");
     }
 }
 
+function removeElement(array, elem) {
+    var index = array.indexOf(elem);
+    if (index > -1) {
+        array.splice(index, 1);
+    }
+}
