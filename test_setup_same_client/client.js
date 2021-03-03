@@ -40,8 +40,8 @@ client.on('connect', function () {
 
 // Incoming messages from mqtt broker
 client.on('message', function (topic, message) {
-
-    if (topic == myTopic + '/serverEvent"') {
+        
+    if (topic == myTopic + '/serverEvent') {
         console.log("Incoming from mqtt: " + topic + ", " + message);
         // parse message to array
         var args = JSON.parse(message);
