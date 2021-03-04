@@ -71,11 +71,9 @@ client.on('message', function (topic, message) {
         if (!foundUser) usersCollect.push(message);
 
     } else {
-        // just disply "normal" messages
+        // just display "normal" messages
         console.log("Incoming from mqtt: " + topic + ", " + message);
     }
-
-
 
 })
 
