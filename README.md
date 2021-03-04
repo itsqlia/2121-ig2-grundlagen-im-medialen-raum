@@ -14,12 +14,19 @@ npm install
 npm run start
 ```
 
-Instead of `npm run start` it might be useful for testing to start two or more clients on different ports. Then:
+Instead of `npm run start` it might be useful for testing to start two or more clients on different ports or give a different topic. Then:
 ```bash
-node client.js 3001
+node client.js 3001 teamplayer/myTeam
 ```
-(or any other port number you think is good)
+The parameter after the file name `client.js` is the port number. Default is `3001`.
 
+After that you can give the topic your client will listen to. Default is `teamplayer/myTeam`. You might choose any path here, but please keep `teamplayer/`as a start followed by your team name. So, something like `teamplayer/littlePanda` would be good.
+
+If you need the same configuration all the time open package.json and edit the line
+```
+  "start": "node ./client.js 3001 teamplayer/myTeam",
+```
+to whatever you need.
 
 In your browser go to one of the examples, e.g.:
 
