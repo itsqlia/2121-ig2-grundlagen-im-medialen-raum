@@ -21,9 +21,15 @@ socket.on('newUsersEvent', function (myID, myIndex, userList) {
     // console.log(userList);
 
     let htmlText = "That's me: " + myID + "<br><br>";
-    for (var i = 0; i < userList.length; i++) {
-        let connectionDate = new Date(userList[i].since);
-        htmlText += userList[i].id + " | " + connectionDate.toLocaleString() + " | " + userList[i].topic + "<br>";
+   
+    if (userList.length > 0) {
+        for (var i = 0; i < userList.length; i++) {
+            let connectionDate = new Date(userList[i].since);
+            htmlText += userList[i].id + " | " + connectionDate.toLocaleString() + " | " + userList[i].topic + "<br>";
+        }
+    
+    } else {
+        htmlText += "Nobody else is here :-("
     }
 
     content.innerHTML = htmlText;
