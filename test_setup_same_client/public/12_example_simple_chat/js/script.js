@@ -8,9 +8,12 @@ let userName = document.querySelector("input#username");
 let chatMessages = document.querySelector(".chat-messages");
 let newMessage = document.querySelector("textarea#newmessage");
 
-newMessage.addEventListener("input", function(e) {
+userName.value = localStorage.getItem('simpleChatUserName');
 
-    if(e.inputType == "insertLineBreak") {
+// listen to changes in the textfield to send the message if a return happens
+newMessage.addEventListener("input", function(e) {
+    // in Chrome, a return does NOT give "insertLineBreak" but "insertText" with data = null
+    if(e.inputType == "insertLineBreak" || (e.inputType == "insertText" && e.data == null)) {
         // Get text from textarea and remove spaces and return at the end
         let messageText = newMessage.value.trim();
         // Clear textarea
@@ -25,6 +28,11 @@ newMessage.addEventListener("input", function(e) {
 
     }
  
+});
+
+// listen to changes of the username to store it locally
+userName.addEventListener("input", function(e) {
+    localStorage.setItem('simpleChatUserName', username.value);
 });
 
 
