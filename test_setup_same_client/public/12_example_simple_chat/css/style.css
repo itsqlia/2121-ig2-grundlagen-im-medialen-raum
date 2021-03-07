@@ -3,12 +3,12 @@
     margin: 0;
     box-sizing: border-box;
     font-family: sans-serif;
-    font-size: 16px;
+    font-size: 14px;
     line-height: 1.3em;
 }
 
 body {
-    background-color: rgb(90, 90, 90);
+    background-color: #333;
     color: #fff;
 }
 
@@ -16,7 +16,9 @@ body {
     width: 300px;
     height: 100vh;
     padding: 10px;
-    background-color: #fff1;
+    background-color: #8884;
+    border-left: 1px solid #666;
+    border-right: 1px solid #666;
 }
 
 #chat-container * {
@@ -25,33 +27,35 @@ body {
 
 label {
     opacity: 0.7;
-    font-size: small;
+    font-size: 0.85em;
 }
 
 .chat-username {
-    height: 30px;
+    height: 25px;
     justify-content: space-between;
     align-items: center;
+    padding: 0px 0px;
 }
 
 .chat-username > input {
     border-radius: 3px;
-    border: 1px solid #000;
+    border: 1px solid #666;
     padding: 5px;
 }
 
 .chat-username > #usercolor {
-    width: 26px;
-    height: 26px;
+    width: 20px;
+    height: 20px;
     background-color: #0088FF;
     border-radius: 13px;
-    border: 1px solid #000;
+    border: 1px solid #666;
     font-size: small;
 }
 
 .chat-messages, .chat-newmessage {
     flex-direction: column;
     margin-top: 20px;  
+    padding: 0px 0px;
 }
 
 .chat-newmessage {
@@ -70,7 +74,7 @@ textarea#newmessage {
     width: 100%;
     resize: none;
     border-radius: 3px;
-    border: 1px solid #000;
+    border: 1px solid #666;
 }
 
 .message {
@@ -97,7 +101,7 @@ textarea#newmessage {
 }
 
 .message > .header {
-    font-size: small;
+    font-size: 0.85em;
     font-weight: 300;
     opacity: 0.6;
 }

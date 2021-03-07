@@ -52,15 +52,16 @@ socket.on('serverEvent', function (message) {
 
     if (message.type == "message") {
         let now = new Date();
+        now = now.toLocaleTimeString().slice(0,-3);
         let newDiv = document.createElement("div");
         newDiv.className = "message";
         newDiv.style.backgroundColor = message.color;
         // Add class "own", if the sending user was me
         if (message.from == userNameElement.value) {
             newDiv.className += " own";
-            newDiv.innerHTML = "<div class='header'>" + now.toLocaleTimeString() + "</div>"
+            newDiv.innerHTML = "<div class='header'>" + now + "</div>"
         } else {
-            newDiv.innerHTML = "<div class='header'>" + message.from + " at " + now.toLocaleTimeString() + "</div>"
+            newDiv.innerHTML = "<div class='header'>" + message.from + " – " + now + "</div>"
         }
         newDiv.innerHTML += "<div class='text'>" + message.text + "</div>";
 
@@ -72,10 +73,14 @@ socket.on('serverEvent', function (message) {
 
 
 function textToColor(text) {
-    text = text.replaceAll(/[\s\-äöüß]/g, "");
+    // Remove all letters that are not 0-9, a-z or A-Z
+    text = text.replaceAll(/[^0-9a-zA-Z]/g, "");
+    // Parse the string as a number to base 36
     let val = parseInt(text, 36);
+    // Calculate hue as a number from 0 to 359
     let hue = val % 360;
-    let crom = val % 47;
-    let color = chroma.lch(70, 30 + crom, hue).hex();
+    // Use the LCH color model which tries to produce equally bright colors for every hue value
+    let color = chroma.lch(70, 90, hue).hex();
+    
     return color;
 }
