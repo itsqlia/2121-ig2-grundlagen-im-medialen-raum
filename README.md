@@ -92,7 +92,7 @@ socket.on('localEvent', function (message1, message2, ...) {
 
 ### Special messages
 
-Sometimes you might want to know how many other users are currently connected to your topic on the mqtt server. You can receive this status information by listening to `'newUsersEvent'`. 
+Sometimes you might want to know how many other users are currently connected to your topic on the mqtt server. You can receive this status information by listening to `'newUsersEvent'`. This event fires when the list changes.
 
 ```javascript
 socket.on('newUsersEvent', function (myID, myIndex, userList) {
