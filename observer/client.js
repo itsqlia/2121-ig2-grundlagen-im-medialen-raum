@@ -7,7 +7,7 @@ app.set('port', port);
 app.use('/', express.static(__dirname + '/public'));
 
 // get topic from arguments
-var myTopic = process.argv[3] || "teamplayer/#";
+var myTopic = process.argv[3] || "#";
 console.log("You'll listen to topic: " + myTopic);
 
 var mqtt = require('mqtt');
@@ -21,7 +21,6 @@ var connectionTimestamp = Date.now();
 var usersConnected = [];
 // For collecting users through whosThereEvent and imHereEvent
 var usersCollect = [];
-var usersCollectPending = false;
 
 client.on('connect', function () {
     console.log("mqtt client connected");
@@ -60,10 +59,7 @@ client.on('connect', function () {
 // Incoming messages from mqtt broker
 client.on('message', function (topic, message) {
 
-    if (topic.endsWith('/whosThereEvent')) {
-        // Start collecting all connected users 
-
-    } else if (topic.endsWith('/imHereEvent')) {
+    if (topic.endsWith('/imHereEvent')) {
         // console.log("Incoming from mqtt: " + topic + ", " + message);
         message = JSON.parse(message);
         message.topic = topic.replace("/imHereEvent", "");
