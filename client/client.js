@@ -20,17 +20,14 @@ let connectionTimestamp = Date.now();
 
 let usersConnected = [];
 let userPings = [];
-// // For collecting users through whosThereEvent and imHereEvent
-// var usersCollect = [];
-// var usersCollectPending = false;
+
 
 client.on('connect', function () {
     console.log("mqtt client connected");
     client.subscribe(myTopic + '/serverEvent', function (err) {});
-    client.subscribe(myTopic + '/whosThereEvent', function (err) {});
     client.subscribe(myTopic + '/imHereEvent', function (err) {});
 
-    // tell everybody (in the same topic) that i'm still here
+    // every second tell everybody (in the same topic) that i'm still here
     setInterval(function() {
         if (process.argv[4] != "invisible") {
             client.publish(myTopic + '/imHereEvent', JSON.stringify({id:userID, since:connectionTimestamp}));
@@ -57,31 +54,6 @@ client.on('message', function (topic, message) {
         } else {
             io.emit('remoteEvent', ...args);
         }
-    }
-
-    if (topic.endsWith('/whosThereEvent')) {
-        // console.log("Incoming from mqtt: " + topic + ", " + message);
-
-        // // Start collecting all connected users 
-        // usersCollect = [];
-        
-        // if (process.argv[4] != "invisible") client.publish(myTopic + '/imHereEvent', JSON.stringify({id:userID, since:connectionTimestamp}));
-        // setTimeout(function() {
-        //     usersCollectPending = false;
-        //     // Sort users on connectionTimestamp to keep order of users constant
-        //     usersCollect.sort(function(a, b) {return (a.since < b.since) ? -1 : (a.since > b.since) ? 1 : 0});
-        //     if (JSON.stringify(usersConnected) != JSON.stringify(usersCollect)) {
-        //         console.log('Users changed!!');
-        //         usersConnected = [...usersCollect];
-        //         console.log('**** new users list:');
-        //         for (var i = 0; i < usersConnected.length; i++) {
-        //             console.log(usersConnected[i]);
-        //         }
-        //         userIndex = usersConnected.findIndex(el => el.id == userID);
-        //         io.emit('newUsersEvent', userID, userIndex, usersConnected);
-        //     }
-
-        // }, 500);
     }
 
     if (topic.endsWith('/imHereEvent')) {
@@ -148,13 +120,6 @@ io.sockets.on('connection', function (socket) {
         // Publish to mqtt
         console.log('Publishing to mqtt:', args);
         client.publish(myTopic + '/serverEvent', args);
-    }); 
-
-    // The browser script can trigger a whosThereEvent. Propably not necessary to use.
-    socket.on('whosThereEvent', function () {
-        if (!usersCollectPending) {
-            client.publish(myTopic + '/whosThereEvent', userID);
-        }
     }); 
 
 });
