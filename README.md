@@ -6,10 +6,10 @@ This setup allows sending messages through an mqtt broker from web browsers to w
 
 There are two versions of test setups. In `/test_setup_different_clients` is a simple example where two different client scripts are communicating.
 
-In `/test_setup_same_client` is the version with just one client but you can have multiple browser windows that connect to the socket server. In the terminal:
+In `/client` is the version to start one client. But you can have multiple browser windows that connect to the socket server. In the terminal:
 
 ```bash
-cd path/to/test_setup_same_client
+cd path/to/client
 npm install
 npm run start
 ```
