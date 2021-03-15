@@ -66,9 +66,13 @@ client.on('message', function (topic, message) {
         var foundUser = usersCollect.find(function(el) {return el.id == message.id});
         if (!foundUser) usersCollect.push(message);
 
-    } else {
+    } else if (topic.endsWith('/serverEvent')) {
         // just display "normal" messages
-        console.log("Incoming from mqtt: " + topic + ", " + message);
+        // console.log("Incoming from mqtt: " + topic + ", " + message);
+
+        // parse message to array
+        let args = JSON.parse(message);
+        io.emit('serverEvent', ...args);
     }
 
 })

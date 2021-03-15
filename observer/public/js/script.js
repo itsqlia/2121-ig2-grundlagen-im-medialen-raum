@@ -11,8 +11,8 @@ let content = document.getElementById("content");
 
 
 // Incoming events 
-socket.on('serverEvent', function (message) {
-    console.log("Incoming event: ", message);
+socket.on('serverEvent', function () {
+    //console.log("Incoming event: ", arguments);
 });
 
 socket.on('newUsersEvent', function (myID, myIndex, userList) {
@@ -22,6 +22,8 @@ socket.on('newUsersEvent', function (myID, myIndex, userList) {
 
     let htmlText = "That's me: " + myID + "<br><br>";
    
+    userList.sort((a, b) => a.topic > b.topic);
+
     if (userList.length > 0) {
         for (var i = 0; i < userList.length; i++) {
             let connectionDate = new Date(userList[i].since);
