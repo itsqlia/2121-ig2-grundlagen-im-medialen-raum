@@ -4,9 +4,7 @@ This setup allows sending messages through an mqtt broker from web browsers to w
 
 ## Installation
 
-There are two versions of test setups. In `/test_setup_different_clients` is a simple example where two different client scripts are communicating.
-
-In `/client` is the version to start one client. But you can have multiple browser windows that connect to the socket server. In the terminal:
+In `/client` is the script to start one client. But you can have multiple browser windows that connect to the socket server. In the terminal:
 
 ```bash
 cd path/to/client
