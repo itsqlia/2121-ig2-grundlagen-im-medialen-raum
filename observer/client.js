@@ -44,10 +44,11 @@ client.on('connect', function () {
                 for (var i = 0; i < usersCollect.length; i++) {
                     console.log(usersCollect[i]);
                 }
+
+                io.emit('newUsersEvent', userID, -1, usersConnected);
             }
 
-            io.emit('newUsersEvent', userID, -1, usersConnected);
-
+           
         }, 2000);
 
     }, 2500);
@@ -90,5 +91,7 @@ io.sockets.on('connection', function (socket) {
     // When the client connects, they are sent a message
     socket.emit('connected', 'You are connected!'); 
     console.log("User connected!");
+
+    io.emit('newUsersEvent', userID, -1, usersConnected);
 
 });
