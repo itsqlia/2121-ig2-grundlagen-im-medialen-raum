@@ -170,13 +170,13 @@ socket.on('serverEvent', function (message) {
 
   if(message == "Racket2Left"){
 
-    racket1.x -= 10
+    racket2.x -= 10
 
   }
 
   if(message == "Racket2Right"){
 
-    racket1.x += 10
+    racket2.x += 10
 
   }
 
