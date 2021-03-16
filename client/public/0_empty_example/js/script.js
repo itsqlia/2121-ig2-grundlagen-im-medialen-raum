@@ -36,7 +36,8 @@ class Block {
   
 
 }
-  let racket = new Block(300,300,150,20,"cyan")
+  let racket1 = new Block(300,300,150,20,"cyan")
+  let racket2 = new Block(300,300,150,20,"cyan")
 
 // OOP final
 class Ball {
@@ -68,7 +69,7 @@ class Ball {
       this.move.y = -this.move.y
     }
 
-    if (this.intersect(racket)) {
+    if (this.intersect(racket1)) {
       
 
         this.move.y = -this.move.y;
@@ -76,6 +77,13 @@ class Ball {
         
     }
       
+    if (this.intersect(racket2)) {
+      
+
+        this.move.y = -this.move.y;
+        this.color = color(Math.random() * 256, Math.random() * 256, Math.random() * 256)  
+        
+    }
 }
 
     
@@ -134,9 +142,12 @@ function draw() {
   ball2.update()
   ball2.show()
   step = false
-  racket.show()
+  racket1.show()  
+  racket2.show()
+
   // racket.x = mouseX
-  racket.y = windowHeight - 100;
+  racket1.y = windowHeight - 50;
+  racket2.y =  50;
   tastendruck();
 }
 
@@ -147,13 +158,25 @@ socket.on('serverEvent', function (message) {
 
   if(message == "Racket1Left"){
 
-    racket.x -= 10
+    racket1.x -= 10
 
   }
 
   if(message == "Racket1Right"){
 
-    racket.x += 10
+    racket1.x += 10
+
+  }
+
+  if(message == "Racket2Left"){
+
+    racket1.x -= 10
+
+  }
+
+  if(message == "Racket2Right"){
+
+    racket1.x += 10
 
   }
 
