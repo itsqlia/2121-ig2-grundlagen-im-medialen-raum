@@ -186,13 +186,14 @@ function tastendruck() {
 
   if (keyIsDown(37)) {
     
-    socket.emit('serverEvent', "Racket1Left")
+    socket.emit('serverEvent', "Racket2Left")
     
   } else if (keyIsDown(39)) {
     
-    socket.emit('serverEvent', "Racket1Right")
+    socket.emit('serverEvent', "Racket2Right")
       
   } 
 
 
 }
+//hallo
