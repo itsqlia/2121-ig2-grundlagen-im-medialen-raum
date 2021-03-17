@@ -132,8 +132,9 @@ class Pig {
   }
 
   let pig1 = new Pig(100,100,50,50,"pink")
+  let pig2 = new Pig(200,200,50,50,"pink")
 
-  )
+  
 
 function setup() {
 
@@ -171,6 +172,8 @@ if (notReady){
   step = false
   racket1.show()  
   racket2.show()
+  pig1.show();
+  pig2.show();
 
   // racket.x = mouseX
   racket1.x = WIDTH - 50;
@@ -232,6 +235,13 @@ function tastendruck() {
       startGame();
     
   }
+// Deprecated code!
+window.addEventListener("keydown", function(e) {
+  // space and arrow keys
+  if([ 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
+      e.preventDefault();
+  }
+}, false);
 
   
 
