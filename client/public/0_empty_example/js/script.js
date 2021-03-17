@@ -17,6 +17,8 @@ let bounce = false
 let running = false
 let gameover = false
 let notReady = true;
+let myIndex;
+
 
 let pigSpeed = 7;
 
@@ -145,13 +147,18 @@ function setup() {
   let c = color(Math.random() * 256, Math.random() * 256, Math.random() * 256);
   fill(c);
 
+  
+
 }
 
 function draw() {
   
     background(50);
+    if (myIndex == 0){
 
     socket.emit('serverEvent', "step")
+
+    }
 
 
 
@@ -246,7 +253,7 @@ socket.on('serverEvent', function (message) {
 
 function tastendruck() {
 
-  let myIndex = myPlayerIndex;
+  
   if (keyIsDown(38)) {
     
     if (myIndex == 0){
