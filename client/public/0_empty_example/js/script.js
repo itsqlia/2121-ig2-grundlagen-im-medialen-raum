@@ -237,6 +237,29 @@ socket.on('serverEvent', function (message) {
     pig1.x += pigSpeed
   }
 
+  if(message == "Pig1Up"){
+
+    pig1.y -= pigSpeed
+
+  }
+
+  if(message == "Pig2Down"){
+
+    pig2.y += pigSpeed
+    
+  }
+
+  if(message == "Pig2Left"){
+
+    pig2.x -= pigSpeed
+
+  }
+
+  if(message == "Pig2Right"){
+
+    pig2.x += pigSpeed
+  }
+
   //step
 
   if(message == "step"){
