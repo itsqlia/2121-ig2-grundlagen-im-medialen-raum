@@ -385,10 +385,13 @@ socket.on('newUsersEvent', function (myID, myIndex, userList) {
         score = 0;
         running= false;
         ball2.pos={x: WIDTH/2, y: HEIGHT/2};
-        pig1.pos={x: WIDTH/2, y: HEIGHT/3};
-        pig2.pos={x: WIDTH/2, y: (HEIGHT/3)*2};
         pig1.x =WIDTH/2
         pig1.y =HEIGHT/3
         pig2.x =WIDTH/2
         pig2.y =(HEIGHT/3)*2
+        setTimeout(3000,startAgain);
+      }
+
+      function startAgain() {
+          running = true;
       }
