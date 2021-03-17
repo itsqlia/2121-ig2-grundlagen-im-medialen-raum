@@ -114,6 +114,27 @@ let ball2 = new Ball({
 }, 'red', 20)
 
 
+class Pig {
+    constructor(x, y, w, h, color) {
+      this.x = x
+      this.y = y
+      this.w = w
+      this.h = h
+      this.color = color
+    }
+  
+    show() {
+      fill(this.color)
+      rect(this.x, this.y, this.w, this.h)
+    }
+  
+  
+  }
+
+  let pig1 = new Pig(100,100,50,50,"pink")
+
+  )
+
 function setup() {
 
   createCanvas(WIDTH, HEIGHT)
