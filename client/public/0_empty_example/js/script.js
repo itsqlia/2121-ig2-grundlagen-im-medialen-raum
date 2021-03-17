@@ -113,7 +113,7 @@ let ball2 = new Ball({
 
 
 function setup() {
-  createCanvas(windowWidth, windowHeight)
+  createCanvas(1920, 1080)
 
   frameRate(30)
   let c = color(Math.random() * 256, Math.random() * 256, Math.random() * 256);
