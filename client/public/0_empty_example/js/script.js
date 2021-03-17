@@ -8,8 +8,8 @@ socket.on('connected', function (msg) {
 });
 
 
-let HEIGHT;
-let WIDTH;
+let HEIGHT = 1080;
+let WIDTH = 1920;
 let MOUSEX;
 let step = false
 let bounce = false
@@ -62,10 +62,10 @@ class Ball {
       this.pos.x = this.pos.x + this.move.x
       this.pos.y = this.pos.y + this.move.y
     }
-    if (this.pos.x < this.size / 2 || this.pos.x > windowWidth - this.size / 2) {
+    if (this.pos.x < this.size / 2 || this.pos.x > WIDTH - this.size / 2) {
       this.move.x = -this.move.x
     }
-    if (this.pos.y < this.size / 2 || this.pos.y > windowHeight - this.size / 2) {
+    if (this.pos.y < this.size / 2 || this.pos.y > HEIGHT - this.size / 2) {
       this.move.y = -this.move.y
     }
 
@@ -113,7 +113,8 @@ let ball2 = new Ball({
 
 
 function setup() {
-  createCanvas(1920, 1080)
+
+  createCanvas(WIDTH, HEIGHT)
 
   frameRate(30)
   let c = color(Math.random() * 256, Math.random() * 256, Math.random() * 256);
@@ -146,7 +147,7 @@ function draw() {
   racket2.show()
 
   // racket.x = mouseX
-  racket1.y = 1030;
+  racket1.y = HEIGHT - 50;
   racket2.y =  50;
   tastendruck();
 }
