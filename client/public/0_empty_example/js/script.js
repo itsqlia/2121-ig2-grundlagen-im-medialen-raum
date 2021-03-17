@@ -154,7 +154,7 @@ function setup() {
 function draw() {
   
     background(50);
-    if (myIndex == 0){
+    if (myPlayerIndex == 0){
 
     socket.emit('serverEvent', "step")
 
@@ -256,51 +256,51 @@ function tastendruck() {
   
   if (keyIsDown(38)) {
     
-    if (myIndex == 0){
+    if (myPlayerIndex == 0){
       socket.emit('serverEvent', "Racket1Up")
     }
-    if (myIndex == 1){
+    if (myPlayerIndex == 1){
       socket.emit('serverEvent', "Racket2Up")
     }
-    if (myIndex == 2){
+    if (myPlayerIndex == 2){
       socket.emit('serverEvent', "Pig1Up")
     }
-    if (myIndex == 3){
+    if (myPlayerIndex == 3){
       socket.emit('serverEvent', "Pig2Up")
     }
     
     
   } else if (keyIsDown(40)) {
 
-    if (myIndex == 0){
+    if (myPlayerIndex == 0){
       socket.emit('serverEvent', "Racket1Down")
     }
-    if (myIndex == 1){
+    if (myPlayerIndex == 1){
       socket.emit('serverEvent', "Racket2Down")
     }
-    if (myIndex == 2){
+    if (myPlayerIndex == 2){
       socket.emit('serverEvent', "Pig1Down")
     }
-    if (myIndex == 3){
+    if (myPlayerIndex == 3){
       socket.emit('serverEvent', "Pig2Down")
     }
   } 
 
     if(keyIsDown(37)){
 
-      if (myIndex == 2){
+      if (myPlayerIndex == 2){
         socket.emit('serverEvent', "Pig1Left")
       }
-      if (myIndex == 3){
+      if (myPlayerIndex == 3){
         socket.emit('serverEvent', "Pig2Left")
       }
     
     } else if (keyIsDown(39)){
 
-      if (myIndex == 2){
+      if (myPlayerIndex == 2){
         socket.emit('serverEvent', "Pig1Right")
       }
-      if (myIndex == 3){
+      if (myPlayerIndex == 3){
         socket.emit('serverEvent', "Pig2Right")
       }
     }
