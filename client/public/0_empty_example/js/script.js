@@ -92,6 +92,15 @@ class Ball {
         
     }
 
+    if (this.intersect(pig1)) {
+      
+     restart()
+  }
+
+  if (this.intersect(pig2)) {
+      
+    restart()  
+}
     
 }
 
@@ -366,7 +375,6 @@ socket.on('newUsersEvent', function (myID, myIndex, userList) {
 });
 
 
-
 // Click to start
 
     function startGame() {
@@ -374,3 +382,11 @@ socket.on('newUsersEvent', function (myID, myIndex, userList) {
       }
   
       //hallo
+      
+      function restart(){
+score = 0;
+running= false;
+ball2.pos={x: WIDTH/2, y: HEIGHT/2};
+pig1.pos={x: WIDTH/2, y: HEIGHT/3};
+pig2.pos={x: WIDTH/2, y: (HEIGHT/3)*2};
+      }
