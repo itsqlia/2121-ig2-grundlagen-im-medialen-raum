@@ -146,7 +146,7 @@ function draw() {
   racket2.show()
 
   // racket.x = mouseX
-  racket1.y = windowHeight - 50;
+  racket1.y = 1030;
   racket2.y =  50;
   tastendruck();
 }
