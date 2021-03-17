@@ -18,6 +18,7 @@ let running = false
 let gameover = false
 let notReady = true;
 
+let pigSpeed = 7;
 
 
 class Block {
@@ -86,6 +87,8 @@ class Ball {
         this.color = color(Math.random() * 256, Math.random() * 256, Math.random() * 256)  
         
     }
+
+    
 }
 
     
@@ -204,6 +207,29 @@ socket.on('serverEvent', function (message) {
 
   }
 
+  if(message == "Pig1Up"){
+
+    pig1.y -= pigSpeed
+
+  }
+
+  if(message == "Pig1Down"){
+
+    pig1.y += pigSpeed
+    
+  }
+
+  if(message == "Pig1Left"){
+
+    pig1.x -= pigSpeed
+
+  }
+
+  if(message == "Pig1Right"){
+
+    pig1.x += pigSpeed
+  }
+
   //step
 
   if(message == "step"){
@@ -220,16 +246,59 @@ socket.on('serverEvent', function (message) {
 
 function tastendruck() {
 
+  let myIndex = myPlayerIndex;
   if (keyIsDown(38)) {
     
-    socket.emit('serverEvent', "Racket1Up")
+    if (myIndex == 0){
+      socket.emit('serverEvent', "Racket1Up")
+    }
+    if (myIndex == 1){
+      socket.emit('serverEvent', "Racket2Up")
+    }
+    if (myIndex == 2){
+      socket.emit('serverEvent', "Pig1Up")
+    }
+    if (myIndex == 3){
+      socket.emit('serverEvent', "Pig2Up")
+    }
+    
     
   } else if (keyIsDown(40)) {
-    
-    socket.emit('serverEvent', "Racket1Down")
-      
+
+    if (myIndex == 0){
+      socket.emit('serverEvent', "Racket1Down")
+    }
+    if (myIndex == 1){
+      socket.emit('serverEvent', "Racket2Down")
+    }
+    if (myIndex == 2){
+      socket.emit('serverEvent', "Pig1Down")
+    }
+    if (myIndex == 3){
+      socket.emit('serverEvent', "Pig2Down")
+    }
   } 
-  if (keyCode == 13){ 
+
+    if(keyIsDown(37)){
+
+      if (myIndex == 2){
+        socket.emit('serverEvent', "Pig1Left")
+      }
+      if (myIndex == 3){
+        socket.emit('serverEvent', "Pig2Left")
+      }
+    
+    } else if (keyIsDown(39)){
+
+      if (myIndex == 2){
+        socket.emit('serverEvent', "Pig1Right")
+      }
+      if (myIndex == 3){
+        socket.emit('serverEvent', "Pig2Right")
+      }
+    }
+  
+    if (keyCode == 13){ 
       startGame();
     
   }
