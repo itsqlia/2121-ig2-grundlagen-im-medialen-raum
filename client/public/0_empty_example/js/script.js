@@ -14,8 +14,9 @@ let WIDTH = 1920;
 let MOUSEX;
 let step = false
 let bounce = false
-let running = true
+let running = false
 let gameover = false
+let notReady = true;
 
 
 
@@ -140,7 +141,12 @@ function draw() {
 
 
   
- 
+if (notReady){
+    fill("white")
+    textSize(36);
+    textAlign(CENTER);
+    text("Press 'Enter' to Start!", WIDTH/2, HEIGHT/2)
+}
   ball2.update()
   ball2.show()
   step = false
@@ -151,6 +157,7 @@ function draw() {
   racket1.y = HEIGHT - 50;
   racket2.y =  50;
   tastendruck();
+
 }
 
 
@@ -182,6 +189,13 @@ socket.on('serverEvent', function (message) {
 
   }
 
+
+  //reset
+  if (message == "reset") {
+  running = true
+  notReady = false;
+}
+
 });
 
 function tastendruck() {
@@ -195,7 +209,12 @@ function tastendruck() {
     socket.emit('serverEvent', "Racket1Right")
       
   } 
+  if (keyCode == 13){ 
+      startGame();
+    
+  }
 
+  
 
 }
 socket.on('newUsersEvent', function (myID, myIndex, userList) {
@@ -215,3 +234,12 @@ socket.on('newUsersEvent', function (myID, myIndex, userList) {
     // }
     
 });
+
+
+
+// Click to start
+
+    function startGame() {
+        socket.emit('serverEvent', "reset");
+      }
+  
