@@ -145,18 +145,11 @@ function setup() {
 }
 
 function draw() {
-  //if (gameover == false){
+  
     background(50);
 
-    
-//}
-  // if (ball2.pos.y > windowHeight - ball2.size / 2){
-  //   ball2.size = 0;
-  //   background("red");
-  //   text("GAME OVER",windowWidth/2, windowHeight/2,);
-  //   gameover = true;
-    
-//}
+    socket.emit('serverEvent', "step")
+
 
 
 
@@ -167,7 +160,7 @@ if (notReady){
     textAlign(CENTER);
     text("Press 'Enter' to Start!", WIDTH/2, HEIGHT/2)
 }
-  ball2.update()
+  
   ball2.show()
   step = false
   racket1.show()  
@@ -211,6 +204,11 @@ socket.on('serverEvent', function (message) {
 
   }
 
+  //step
+
+  if(message == "step"){
+    ball2.update()
+  }
 
   //reset
   if (message == "reset") {
