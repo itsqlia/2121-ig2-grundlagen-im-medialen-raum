@@ -18,7 +18,7 @@ let running = false
 let gameover = false
 let notReady = true;
 let myIndex;
-
+let score = 0;
 
 let pigSpeed = 7;
 
@@ -76,6 +76,7 @@ class Ball {
 
     if (this.intersect(racket1)) {
       
+        score += 1;
 
         this.move.x = -this.move.x;
         this.color = color(Math.random() * 256, Math.random() * 256, Math.random() * 256)  
@@ -84,6 +85,7 @@ class Ball {
       
     if (this.intersect(racket2)) {
       
+        score += 1;
 
         this.move.x = -this.move.x;
         this.color = color(Math.random() * 256, Math.random() * 256, Math.random() * 256)  
@@ -160,8 +162,10 @@ function draw() {
 
     }
 
-
-
+    fill("white");
+    textAlign(CENTER);
+    textSize(30);
+    text("Score  " + score, WIDTH/2, 50)
 
   
 if (notReady){
