@@ -7,7 +7,8 @@ socket.on('connected', function (msg) {
     console.log(msg);
 });
 
-
+let myPlayerIndex = 0;
+let playerCount = 0;
 let HEIGHT = 1080;
 let WIDTH = 1920;
 let MOUSEX;
@@ -187,14 +188,30 @@ function tastendruck() {
 
   if (keyIsDown(37)) {
     
-    socket.emit('serverEvent', "Racket2Left")
+    socket.emit('serverEvent', "Racket1Left")
     
   } else if (keyIsDown(39)) {
     
-    socket.emit('serverEvent', "Racket2Right")
+    socket.emit('serverEvent', "Racket1Right")
       
   } 
 
 
 }
-//hallo
+socket.on('newUsersEvent', function (myID, myIndex, userList) {
+    console.log("New users event: ");
+    console.log("That's me: " + myID);
+    console.log("My index in the list: " + myIndex);
+    console.log("That's the new users: ");
+    console.log(userList);
+
+    playerCount = userList.length;
+    myPlayerIndex = myIndex;
+
+    // updateStatus();
+
+    // function updateStatus() {
+  
+    // }
+    
+});
