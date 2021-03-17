@@ -237,9 +237,9 @@ socket.on('serverEvent', function (message) {
     pig1.x += pigSpeed
   }
 
-  if(message == "Pig1Up"){
+  if(message == "Pig2Up"){
 
-    pig1.y -= pigSpeed
+    pig2.y -= pigSpeed
 
   }
 
