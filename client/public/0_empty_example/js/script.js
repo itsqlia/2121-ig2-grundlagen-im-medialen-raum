@@ -346,3 +346,4 @@ socket.on('newUsersEvent', function (myID, myIndex, userList) {
         socket.emit('serverEvent', "reset");
       }
   
+      //hallo
