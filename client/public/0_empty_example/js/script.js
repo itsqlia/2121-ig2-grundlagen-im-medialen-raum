@@ -8,6 +8,7 @@ socket.on('connected', function (msg) {
 });
 
 let myPlayerIndex = 0;
+let myPlayerIndexOffset = 0;
 let playerCount = 0;
 let HEIGHT = 1080;
 let WIDTH = 1920;
@@ -359,85 +360,87 @@ socket.on('serverEvent', function (message) {
 
 function tastendruck() {
 
+  let myPlayerRole = (myPlayerIndex + myPlayerIndexOffset) % 4;
+
   if (running == true) {
 
 
     if (keyIsDown(38)) {
 
-      if (myPlayerIndex == 0) {
+      if (myPlayerRole == 0) {
         socket.emit('serverEvent', "Racket1Up")
 
         if (ballStickRight == true) {
           socket.emit('serverEvent', "BallUp")
         }
       }
-      if (myPlayerIndex == 1) {
+      if (myPlayerRole == 1) {
         socket.emit('serverEvent', "Racket2Up")
 
         if (ballStickLeft == true) {
           socket.emit('serverEvent', "BallUp")
         }
       }
-      if (myPlayerIndex == 2) {
+      if (myPlayerRole == 2) {
         socket.emit('serverEvent', "Pig1Up")
       }
-      if (myPlayerIndex == 3) {
+      if (myPlayerRole == 3) {
         socket.emit('serverEvent', "Pig2Up")
       }
 
 
     } else if (keyIsDown(40)) {
 
-      if (myPlayerIndex == 0) {
+      if (myPlayerRole == 0) {
         socket.emit('serverEvent', "Racket1Down")
 
         if (ballStickRight == true) {
           socket.emit('serverEvent', "BallDown")
         }
       }
-      if (myPlayerIndex == 1) {
+      if (myPlayerRole == 1) {
         socket.emit('serverEvent', "Racket2Down")
 
         if (ballStickLeft == true) {
           socket.emit('serverEvent', "BallDown")
         }
       }
-      if (myPlayerIndex == 2) {
+      if (myPlayerRole == 2) {
         socket.emit('serverEvent', "Pig1Down")
       }
-      if (myPlayerIndex == 3) {
+      if (myPlayerRole == 3) {
         socket.emit('serverEvent', "Pig2Down")
       }
     }
 
     if (keyIsDown(37)) {
 
-      if (myPlayerIndex == 2) {
+      if (myPlayerRole == 2) {
         socket.emit('serverEvent', "Pig1Left")
       }
-      if (myPlayerIndex == 3) {
+      if (myPlayerRole == 3) {
         socket.emit('serverEvent', "Pig2Left")
       }
 
     } else if (keyIsDown(39)) {
 
-      if (myPlayerIndex == 2) {
+      if (myPlayerRole == 2) {
         socket.emit('serverEvent', "Pig1Right")
       }
-      if (myPlayerIndex == 3) {
+      if (myPlayerRole == 3) {
         socket.emit('serverEvent', "Pig2Right")
       }
     }
 
     if (keyIsDown(32)) {
 
-      if (myPlayerIndex == 0 && ballStickRight == true) {
+      if (myPlayerRole == 0 && ballStickRight == true) {
 
         socket.emit('serverEvent', "PlayBall")
 
       }
 
-      if (myPlayerIndex == 1 && ballStickLeft == true) {
+      if (myPlayerRole == 1 && ballStickLeft == true) {
 
         socket.emit('serverEvent', "PlayBall")
 
@@ -497,13 +500,14 @@ function restart() {
   pig2.x = WIDTH / 2
   pig2.y = (HEIGHT / 3) * 2
   setTimeout(startAgain, 3000);
-  console.log("hi")
+  myPlayerIndexOffset +=2;
+
 }
 
 function startAgain() {
   running = true;
   runningBall = true;
-  console.log("lol")
+
 }
 
 function hold() {
