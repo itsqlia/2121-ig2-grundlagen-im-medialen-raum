@@ -6,6 +6,7 @@ let blocks = []
 let balls = []
 let collisions = []
 let layers = []
+let ballVelocity = 10
 
 socket.on('connected', function (msg) {
   console.log(msg);
@@ -37,6 +38,7 @@ let ballStickLeft = false;
 let ballStickRight = false;
 
 let pigSpeed = 7;
+
 
 
 class Block {
@@ -72,6 +74,7 @@ class Block {
   update(ball) {
     if (this.attrs.force) {
       Matter.Body.applyForce(ball, ball.position, this.attrs.force)
+      
     }
   }
   show() {
@@ -80,29 +83,40 @@ class Block {
   }
 
 
-
-
 }
+
 
   // create an engine
   engine = Matter.Engine.create();
 
+
+ 
+
 //rackets
-let racket1 = blocks.push(new Block('rect',{ x: 20, y: HEIGHT/2 , w: 20, h: 150, color: "cyan" }, { isStatic: true}));
-let racket2 = blocks.push(new Block('rect',{ x: WIDTH - 40, y: HEIGHT/2 , w: 20, h: 150, color: "cyan" }, { isStatic: true}));
+ blocks.push(new Block('rect',{ x: 20, y: HEIGHT/2 , w: 40, h: 150, color: "cyan" }, { isStatic: false, density:500000}));
+blocks.push(new Block('rect',{ x: WIDTH - 20, y: HEIGHT/2 , w: 40, h: 150, color: "cyan" }, { isStatic: false, density:500000,friction: 0}));
+let racket2 =blocks[0].body
+let racket1 = blocks[1].body
 
-
-
-ball = Matter.Bodies.circle(WIDTH/2, HEIGHT/2, 20, {
-  restitution: 0.1,
-  density: 0.05,
-  friction: 0
-})
+ball = Matter.Bodies.circle(WIDTH/2, HEIGHT/2, 20,{frictionAir:0, friction: 0 ,restitution: 1})
 Matter.World.add(engine.world, ball)
 balls.push(ball)
 
-let pig1 = blocks.push(new Block('rect',{ x: WIDTH/2, y: HEIGHT/3 , w: 50, h: 50, color: color("pink") }, { isStatic: true}));
-let pig2 = blocks.push(new Block('rect',{ x: WIDTH/2, y: (HEIGHT/3)*2 , w: 50, h: 50, color: color("pink") }, { isStatic: true}));
+
+
+blocks.push(new Block('rect',{ x: WIDTH/2, y: HEIGHT/3 , w: 50, h: 50, color: "pink" }, { isStatic: false}));
+blocks.push(new Block('rect',{ x: WIDTH/2, y: (HEIGHT/3)*2 , w: 50, h: 50, color: "pink" }, { isStatic: false}));
+let pig1 = blocks[2].body
+let pig2 = blocks[3].body
+
+
+//wall borders
+blocks.push(new Block('rect',{ x: -10, y: -10 , w: 20, h: 4000, color: "cyan" }, { isStatic: true}));
+blocks.push(new Block('rect',{ x: -10, y: -10 , w: 4000, h: 20, color: "cyan" }, { isStatic: true}));
+blocks.push(new Block('rect',{ x: WIDTH + 10, y: HEIGHT + 10 , w: 4000, h: 20, color: "cyan" }, { isStatic: true}));
+blocks.push(new Block('rect',{ x: WIDTH + 10, y: HEIGHT +10 , w: 20, h: 4000, color: "cyan" }, { isStatic: true}));
+
+
 
 
   // Process collisions - check whether ball hits a Block object
@@ -123,8 +137,10 @@ let pig2 = blocks.push(new Block('rect',{ x: WIDTH/2, y: (HEIGHT/3)*2 , w: 50, h
       if (bodyBlock.plugin && bodyBlock.plugin.block) {
         // remember the collision for processing in 'beforeUpdate'
         collisions.push({ hit: bodyBlock.plugin.block, ball: bodyBall })
-        console.log('hit')
-        console.log(domino.position.x)
+
+        
+        ballVelocity =-ballVelocity;
+       
 
       }
     }
@@ -137,30 +153,21 @@ let pig2 = blocks.push(new Block('rect',{ x: WIDTH/2, y: (HEIGHT/3)*2 , w: 50, h
       collision.hit.update(collision.ball)
     });
     collisions = []
-    balls.forEach((ball, i) => {
-      attract(ball)
-
+   
    });
-  })
-
-  canvas.mousePressed(startEngine);
-
-  document.addEventListener('keyup', onKeyUp)
+  
 
 
-function onKeyUp(evt) {
-  switch (evt.key) {
-    case ' ':
-      startEngine()
-      evt.preventDefault()
-      break
-  }
-}
+
+
+
+
+
 
 function startEngine() {
   if (0 == engine.timing.timestamp) {
     Matter.Engine.run(engine)
-    userStartAudio()
+    engine.world.gravity.y =0;
   }
 }
 
@@ -170,7 +177,7 @@ function setup() {
   createCanvas(WIDTH, HEIGHT)
   let c = color(Math.random() * 256, Math.random() * 256, Math.random() * 256);
   fill(c);
-
+  startEngine();
 
 
 }
@@ -179,6 +186,10 @@ function draw() {
 
   background(50);
 
+  if (running && runningBall) {
+    Matter.Body.setVelocity(ball, {x:ballVelocity,y:ballVelocity});
+    
+  }
 
   if (myPlayerIndex == 0) {
 
@@ -229,78 +240,78 @@ socket.on('serverEvent', function (message) {
 
   if (message == "Racket1Up") {
 
-    racket1.y -= 10
+    Matter.Body.translate(racket1, {x:0,y:-10});
 
   }
 
   if (message == "Racket1Down") {
 
-    racket1.y += 10
+    Matter.Body.translate(racket1, {x:0,y:10});
 
   }
 
   if (message == "Racket2Up") {
 
-    racket2.y -= 10
+    Matter.Body.translate(racket2, {x:0,y:-10});
 
   }
 
   if (message == "Racket2Down") {
 
-    racket2.y += 10
+    Matter.Body.translate(racket2, {x:0,y:10});
 
   }
 
   if (message == "Pig1Up") {
 
-    pig1.y -= pigSpeed
-
+   
+    Matter.Body.translate(pig1, {x:0,y:-pigSpeed});
   }
 
   if (message == "Pig1Down") {
 
-    pig1.y += pigSpeed
+    Matter.Body.translate(pig1, {x:0,y:pigSpeed});
 
   }
 
   if (message == "Pig1Left") {
 
-    pig1.x -= pigSpeed
+    Matter.Body.translate(pig1, {x:-pigSpeed,y:0});
 
   }
 
   if (message == "Pig1Right") {
 
-    pig1.x += pigSpeed
+    Matter.Body.translate(pig1, {x:pigSpeed,y:0});
   }
 
   if (message == "Pig2Up") {
 
-    pig2.y -= pigSpeed
+    Matter.Body.translate(pig2, {x:0,y:-pigSpeed});
 
   }
 
   if (message == "Pig2Down") {
 
-    pig2.y += pigSpeed
+    Matter.Body.translate(pig2, {x:0,y:pigSpeed});
 
   }
 
   if (message == "Pig2Left") {
 
-    pig2.x -= pigSpeed
+    Matter.Body.translate(pig2, {x:-pigSpeed,y:0});
 
   }
 
   if (message == "Pig2Right") {
 
-    pig2.x += pigSpeed
+    Matter.Body.translate(pig2, {x:pigSpeed,y:0});
   }
 
   //step
 
   if (message == "step") {
-    ball.update()
+    //////////
   }
 
   //reset
@@ -312,13 +323,15 @@ socket.on('serverEvent', function (message) {
 
   if (message == "BallUp") {
 
-    ball.pos.y -= 10
+  
+    Matter.Body.translate(ball, {x:0,y:-10});
 
   }
 
   if (message == "BallDown") {
 
-    ball.pos.y += 10
+  
+    Matter.Body.translate(ball, {x:0,y:10});
 
   }
 
@@ -527,5 +540,4 @@ function drawVertices(vertices) {
   })
   endShape(CLOSE)
 }
-
-
+  
