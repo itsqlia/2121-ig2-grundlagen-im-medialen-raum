@@ -51,8 +51,8 @@ class Block {
   
 
 }
-  let racket1 = new Block(50,HEIGHT/2,20,150,"cyan")
-  let racket2 = new Block(50,HEIGHT/2,20,150,"cyan")
+  let racket1 = new Block(50,HEIGHT/2,40,150,"cyan")
+  let racket2 = new Block(50,HEIGHT/2,40,150,"cyan")
 
 // OOP final
 class Ball {
@@ -215,8 +215,8 @@ if (notReady){
   pop();
 
   // racket.x = mouseX
-  racket1.x = WIDTH - 35;
-  racket2.x =  15;
+  racket1.x = WIDTH - 40;
+  racket2.x =  0;
   tastendruck();
 
 }
