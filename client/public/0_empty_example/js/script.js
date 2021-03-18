@@ -77,7 +77,7 @@ class Ball {
       this.pos.x = this.pos.x + this.move.x
       this.pos.y = this.pos.y + this.move.y
     }
-    if (this.pos.x < this.size / 2 || this.pos.x > WIDTH - this.size / 2) {
+    if (this.pos.x < 60 || this.pos.x > WIDTH-40 - this.size / 2) {
       this.move.x = -this.move.x
     }
     if (this.pos.y < this.size / 2 || this.pos.y > HEIGHT - this.size / 2) {
@@ -184,6 +184,14 @@ function setup() {
 function draw() {
   
     background(50);
+
+    push();
+    fill(100,100,100);
+    noStroke();
+    rect(0,0,40,1080);
+    rect(1880,0,40,1080);
+    pop();
+
     if (myPlayerIndex == 0){
 
     socket.emit('serverEvent', "step")
