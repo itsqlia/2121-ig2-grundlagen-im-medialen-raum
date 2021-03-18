@@ -77,7 +77,7 @@ class Ball {
       this.pos.x = this.pos.x + this.move.x
       this.pos.y = this.pos.y + this.move.y
     }
-    if (this.pos.x < 60 || this.pos.x > WIDTH-40 - this.size / 2) {
+    if (this.pos.x < 45 || this.pos.x > WIDTH-35 - this.size / 2) {
       this.move.x = -this.move.x
     }
     if (this.pos.y < this.size / 2 || this.pos.y > HEIGHT - this.size / 2) {
