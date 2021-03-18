@@ -231,7 +231,7 @@ push();
   fill("red");
   textAlign(CENTER);
   textSize(30);
-  text("HighScore  " + score, WIDTH / 2, 70)
+  text("High Score  " + highScore, WIDTH / 2, 90)
 pop();
 
 
