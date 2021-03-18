@@ -146,9 +146,9 @@ class Pig {
   
   
   }
-
-  let pig1 = new Pig(100,100,50,50,"pink")
-  let pig2 = new Pig(200,200,50,50,"pink")
+  
+  let pig1 = new Pig(WIDTH/2,HEIGHT/3,50,50,"pink")
+  let pig2 = new Pig(WIDTH/2,(HEIGHT/3)*2,50,50,"pink")
 
   
 
@@ -188,8 +188,12 @@ if (notReady){
   step = false
   racket1.show()  
   racket2.show()
+
+  push();
+  rectMode(CENTER);
   pig1.show();
   pig2.show();
+  pop();
 
   // racket.x = mouseX
   racket1.x = WIDTH - 50;
@@ -289,6 +293,8 @@ socket.on('serverEvent', function (message) {
 
 function tastendruck() {
 
+  if(running == true){
+
   
   if (keyIsDown(38)) {
     
@@ -340,6 +346,8 @@ function tastendruck() {
         socket.emit('serverEvent', "Pig2Right")
       }
     }
+
+  }
   
     if (keyCode == 13){ 
       startGame();
