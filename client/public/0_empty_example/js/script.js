@@ -14,13 +14,21 @@ let WIDTH = 1920;
 let MOUSEX;
 let step = false
 let bounce = false
+
 let running = false
 let runningBall = false
+
 let gameover = false
 let notReady = true;
+
 let myIndex;
+
 let score = 0;
 let stopScore = false;
+
+
+let ballStickLeft = false;
+let ballStickRight = false;
 
 let pigSpeed = 7;
 
@@ -79,7 +87,7 @@ class Ball {
   
     if (this.intersect(racket1)) {
       
-      if(ball2.pos.x == 1880 && stopScore == false){
+      if(ball.pos.x == 1880 && stopScore == false){
 
         score += 1;
 
@@ -92,7 +100,7 @@ class Ball {
       
     if (this.intersect(racket2)) {
 
-      if(ball2.pos.x == 40 && stopScore == false ){
+      if(ball.pos.x == 40 && stopScore == false ){
       
         score += 1;
 
@@ -135,7 +143,7 @@ class Ball {
 
   }}
 
-let ball2 = new Ball({
+let ball = new Ball({
   x: WIDTH/2,
   y: HEIGHT/2
 }, 'red', 20)
@@ -195,7 +203,7 @@ if (notReady){
     text("Press 'Enter' to Start!", WIDTH/2, HEIGHT/6)
 }
   
-  ball2.show()
+  ball.show()
   step = false
   racket1.show()  
   racket2.show()
@@ -291,7 +299,7 @@ socket.on('serverEvent', function (message) {
   //step
 
   if(message == "step"){
-    ball2.update()
+    ball.update()
   }
 
   //reset
@@ -300,6 +308,28 @@ socket.on('serverEvent', function (message) {
   runningBall = true;
   notReady = false;
 }
+
+  if(message == "BallUp"){
+
+    ball.pos.y -= 10
+
+  }
+
+  if(message == "BallDown"){
+
+    ball.pos.y += 10
+
+  }
+
+  if(message == "PlayBall"){
+
+    runningBall = true;
+    ballStickLeft = false;
+    ballStickRight = false;
+    stopScore = false;
+    
+
+  }
 
 });
 
@@ -312,9 +342,17 @@ function tastendruck() {
     
     if (myPlayerIndex == 0){
       socket.emit('serverEvent', "Racket1Up")
+      
+      if(ballStickRight == true){
+        socket.emit('serverEvent', "BallUp")
+      }
     }
     if (myPlayerIndex == 1){
       socket.emit('serverEvent', "Racket2Up")
+      
+      if(ballStickLeft == true){
+        socket.emit('serverEvent', "BallUp")
+      }
     }
     if (myPlayerIndex == 2){
       socket.emit('serverEvent', "Pig1Up")
@@ -328,9 +366,17 @@ function tastendruck() {
 
     if (myPlayerIndex == 0){
       socket.emit('serverEvent', "Racket1Down")
+
+      if(ballStickRight == true){
+        socket.emit('serverEvent', "BallDown")
+      }
     }
     if (myPlayerIndex == 1){
       socket.emit('serverEvent', "Racket2Down")
+
+      if(ballStickLeft == true){
+        socket.emit('serverEvent', "BallDown")
+      }
     }
     if (myPlayerIndex == 2){
       socket.emit('serverEvent', "Pig1Down")
@@ -358,6 +404,22 @@ function tastendruck() {
         socket.emit('serverEvent', "Pig2Right")
       }
     }
+
+    if(keyIsDown(32)){
+      
+      if(myPlayerIndex == 0 && ballStickRight == true){
+
+        socket.emit('serverEvent', "PlayBall")
+
+      }
+
+      if(myPlayerIndex == 1 && ballStickLeft == true){
+
+        socket.emit('serverEvent', "PlayBall")
+
+      }
+    }
+    
 
   }
   
@@ -405,7 +467,7 @@ socket.on('newUsersEvent', function (myID, myIndex, userList) {
         score = 0;
         running= false;
         runningBall = false;
-        ball2.pos={x: WIDTH/2, y: HEIGHT/2};
+        ball.pos={x: WIDTH/2, y: HEIGHT/2};
         pig1.x =WIDTH/2
         pig1.y =HEIGHT/3
         pig2.x =WIDTH/2
@@ -424,4 +486,16 @@ socket.on('newUsersEvent', function (myID, myIndex, userList) {
 
         runningBall = false;
         stopScore = true;
+        
+
+        if(ball.pos.x < WIDTH/2){
+
+          ballStickLeft = true;
+        }
+
+        if(ball.pos.x > WIDTH/2){
+
+          ballStickRight = true;
+        }
+
       } 
