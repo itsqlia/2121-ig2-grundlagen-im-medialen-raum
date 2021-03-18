@@ -26,6 +26,7 @@ let myIndex;
 
 let score = 0;
 let stopScore = false;
+let highScore = 0;
 
 
 let ballStickLeft = false;
@@ -98,6 +99,9 @@ class Ball {
       if (stopScore == false) {
 
         score += 1;
+        if (score > highScore){
+          highScore += 1;
+        }
         
 
       }
@@ -119,6 +123,9 @@ class Ball {
       if (stopScore == false) {
 
         score += 1;
+        if (score > highScore){
+          highScore += 1;
+        }
 
       }
       hold();
@@ -219,6 +226,13 @@ function draw() {
   textAlign(CENTER);
   textSize(30);
   text("Score  " + score, WIDTH / 2, 50)
+
+push();
+  fill("red");
+  textAlign(CENTER);
+  textSize(30);
+  text("HighScore  " + score, WIDTH / 2, 70)
+pop();
 
 
   if (notReady) {
