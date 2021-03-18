@@ -15,10 +15,12 @@ let MOUSEX;
 let step = false
 let bounce = false
 let running = false
+let runningBall = false
 let gameover = false
 let notReady = true;
 let myIndex;
 let score = 0;
+let stopScore = false;
 
 let pigSpeed = 7;
 
@@ -63,7 +65,7 @@ class Ball {
   }
 
   update() {
-    if (running || step) {
+    if (running && runningBall) {
       this.pos.x = this.pos.x + this.move.x
       this.pos.y = this.pos.y + this.move.y
     }
@@ -73,20 +75,29 @@ class Ball {
     if (this.pos.y < this.size / 2 || this.pos.y > HEIGHT - this.size / 2) {
       this.move.y = -this.move.y
     }
-
+    
+  
     if (this.intersect(racket1)) {
       
+      if(ball2.pos.x == 1880 && stopScore == false){
+
         score += 1;
 
+      }
+        hold();
         this.move.x = -this.move.x;
         this.color = color(Math.random() * 256, Math.random() * 256, Math.random() * 256)  
         
     }
       
     if (this.intersect(racket2)) {
+
+      if(ball2.pos.x == 40 && stopScore == false ){
       
         score += 1;
 
+      }
+        hold();
         this.move.x = -this.move.x;
         this.color = color(Math.random() * 256, Math.random() * 256, Math.random() * 256)  
         
@@ -125,8 +136,8 @@ class Ball {
   }}
 
 let ball2 = new Ball({
-  x: 10,
-  y: 300
+  x: WIDTH/2,
+  y: HEIGHT/2
 }, 'red', 20)
 
 
@@ -181,7 +192,7 @@ if (notReady){
     fill("white")
     textSize(36);
     textAlign(CENTER);
-    text("Press 'Enter' to Start!", WIDTH/2, HEIGHT/2)
+    text("Press 'Enter' to Start!", WIDTH/2, HEIGHT/6)
 }
   
   ball2.show()
@@ -196,8 +207,8 @@ if (notReady){
   pop();
 
   // racket.x = mouseX
-  racket1.x = WIDTH - 50;
-  racket2.x =  50;
+  racket1.x = WIDTH - 35;
+  racket2.x =  15;
   tastendruck();
 
 }
@@ -285,7 +296,8 @@ socket.on('serverEvent', function (message) {
 
   //reset
   if (message == "reset") {
-  running = true
+  running = true;
+  runningBall = true;
   notReady = false;
 }
 
@@ -392,14 +404,24 @@ socket.on('newUsersEvent', function (myID, myIndex, userList) {
     function restart(){
         score = 0;
         running= false;
+        runningBall = false;
         ball2.pos={x: WIDTH/2, y: HEIGHT/2};
         pig1.x =WIDTH/2
         pig1.y =HEIGHT/3
         pig2.x =WIDTH/2
         pig2.y =(HEIGHT/3)*2
-        setTimeout(3000,startAgain);
+        setTimeout(startAgain, 3000);
+        console.log("hi")
       }
 
       function startAgain() {
           running = true;
+          runningBall = true;
+          console.log("lol")
       }
+
+      function hold() {
+
+        runningBall = false;
+        stopScore = true;
+      } 
