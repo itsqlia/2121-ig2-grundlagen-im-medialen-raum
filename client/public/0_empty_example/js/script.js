@@ -304,7 +304,7 @@ function setup() {
   createCanvas(WIDTH, HEIGHT)
   let c = color(Math.random() * 256, Math.random() * 256, Math.random() * 256);
   fill(c);
-  frameRate(20);
+  frameRate(40);
 
 
 }
@@ -319,7 +319,7 @@ function draw() {
   collision();
 
 
-  if (myPlayerIndex == 0) {
+  if (myPlayerIndex == 0 && running) {
 
     socket.emit('serverEvent', "step")
 
@@ -644,7 +644,7 @@ function tastendruck() {
 
   }
 
-  if (keyCode == 13) {
+  if (keyCode == 13 && !running) {
     startGame();
 
   }
