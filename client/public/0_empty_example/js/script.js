@@ -210,12 +210,6 @@ function draw() {
 
   background(50);
 
-  // push();
-  // fill(100,100,100);
-  // noStroke();
-  // rect(0,0,40,1080);
-  // rect(1880,0,40,1080);
-  // pop();
 
   collision();
 
@@ -265,6 +259,259 @@ pop();
 }
 
 
+socket.on('newUsersEvent', function (myID, myIndex, userList) {
+  console.log("New users event: ");
+  console.log("That's me: " + myID);
+  console.log("My index in the list: " + myIndex);
+  console.log("That's the new users: ");
+  console.log(userList);
+
+  playerCount = userList.length;
+  myPlayerIndex = myIndex;
+
+
+});
+
+
+// Click to start
+
+function startGame() {
+  socket.emit('serverEvent', "reset");
+}
+
+function restart() {
+  score = 0;
+  running = false;
+  runningBall = false;
+  ball.pos = { x: WIDTH / 2, y: HEIGHT / 2 };
+  pig1.x = WIDTH / 2
+  pig1.y = HEIGHT / 3
+  pig2.x = WIDTH / 2
+  pig2.y = (HEIGHT / 3) * 2
+  setTimeout(startAgain, 3000);
+  myPlayerIndexOffset +=2;
+
+}
+
+function startAgain() {
+  running = true;
+  runningBall = true;
+
+}
+
+function hold() {
+
+  runningBall = false;
+  stopScore = true;
+
+
+  if (ball.pos.x < WIDTH / 2) {
+
+    ballStickLeft = true;
+  }
+
+  if (ball.pos.x > WIDTH / 2) {
+
+    ballStickRight = true;
+  }
+
+}
+
+//create window boundaries/collisions
+function collision(){
+
+
+// Rackets 
+
+if(racket1.y < 0){      //over top of window
+
+racket1.y = racket1.y + racketSpeed;
+
+}
+
+if(racket1.y + racket1.h > HEIGHT){      //under bottom of window
+
+  racket1.y = racket1.y - racketSpeed;
+  
+}
+
+if(racket2.y < 0){      //over top of window
+
+  racket2.y = racket2.y + racketSpeed;
+    
+}
+    
+if(racket2.y + racket2.h > HEIGHT){      //under bottom of window
+    
+  racket2.y = racket2.y - racketSpeed;
+      
+}
+
+//Pigs
+
+
+//Pig1
+if(pig1.y - pig1.h/2 < 0){      //over top of window
+
+  pig1.y = pig1.y + pigSpeed;
+  
+  }
+  
+  if(pig1.y + pig1.h/2 > HEIGHT){      //under bottom of window
+  
+    pig1.y = pig1.y - pigSpeed;
+    
+  }
+
+  if(pig1.x < 200){      //left out of window
+  
+    pig1.x = pig1.x + pigSpeed;
+      
+  }
+  
+  if(pig1.x > WIDTH - 200){      //right out of window
+  
+    pig1.x = pig1.x - pigSpeed;
+      
+  }
+
+  //Pig2
+  
+  if(pig2.y - pig2.h/2 < 0){      //over top of window
+  
+    pig2.y = pig2.y + pigSpeed;
+      
+  }
+      
+  if(pig2.y + pig2.h/2 > HEIGHT){      //under bottom of window
+      
+    pig2.y = pig2.y - pigSpeed;
+        
+  }
+
+  if(pig2.x < 200){      //left out of window
+  
+    pig2.x = pig2.x + pigSpeed;
+      
+  }
+  
+  if(pig2.x > WIDTH - 200){      //right out of window
+  
+    pig2.x = pig2.x - pigSpeed;
+      
+  }
+
+  
+
+}
+
+function tastendruck() {
+
+  let myPlayerRole = (myPlayerIndex + myPlayerIndexOffset) % 4;
+
+  if (running == true) {
+
+
+    if (keyIsDown(38)) {
+
+      if (myPlayerRole == 0) {
+        socket.emit('serverEvent', "Racket1Up")
+
+        if (ballStickRight == true) {
+          socket.emit('serverEvent', "BallUp")
+        }
+      }
+      if (myPlayerRole == 1) {
+        socket.emit('serverEvent', "Racket2Up")
+
+        if (ballStickLeft == true) {
+          socket.emit('serverEvent', "BallUp")
+        }
+      }
+      if (myPlayerRole == 2) {
+        socket.emit('serverEvent', "Pig1Up")
+      }
+      if (myPlayerRole == 3) {
+        socket.emit('serverEvent', "Pig2Up")
+      }
+
+
+    } else if (keyIsDown(40)) {
+
+      if (myPlayerRole == 0) {
+        socket.emit('serverEvent', "Racket1Down")
+
+        if (ballStickRight == true) {
+          socket.emit('serverEvent', "BallDown")
+        }
+      }
+      if (myPlayerRole == 1) {
+        socket.emit('serverEvent', "Racket2Down")
+
+        if (ballStickLeft == true) {
+          socket.emit('serverEvent', "BallDown")
+        }
+      }
+      if (myPlayerRole == 2) {
+        socket.emit('serverEvent', "Pig1Down")
+      }
+      if (myPlayerRole == 3) {
+        socket.emit('serverEvent', "Pig2Down")
+      }
+    }
+
+    if (keyIsDown(37)) {
+
+      if (myPlayerRole == 2) {
+        socket.emit('serverEvent', "Pig1Left")
+      }
+      if (myPlayerRole == 3) {
+        socket.emit('serverEvent', "Pig2Left")
+      }
+
+    } else if (keyIsDown(39)) {
+
+      if (myPlayerRole == 2) {
+        socket.emit('serverEvent', "Pig1Right")
+      }
+      if (myPlayerRole == 3) {
+        socket.emit('serverEvent', "Pig2Right")
+      }
+    }
+
+    if (keyIsDown(32)) {
+
+      if (myPlayerRole == 0 && ballStickRight == true) {
+
+        socket.emit('serverEvent', "PlayBall")
+
+      }
+
+      if (myPlayerRole == 1 && ballStickLeft == true) {
+
+        socket.emit('serverEvent', "PlayBall")
+
+      }
+    }
+
+
+  }
+
+  if (keyCode == 13) {
+    startGame();
+
+  }
+  // Deprecated code!
+  window.addEventListener("keydown", function (e) {
+    // space and arrow keys
+    if ([37, 38, 39, 40].indexOf(e.keyCode) > -1) {
+      e.preventDefault();
+    }
+  }, false);
+
+
+
+}
 
 // Incoming events 
 socket.on('serverEvent', function (message) {
@@ -375,261 +622,3 @@ socket.on('serverEvent', function (message) {
   }
 
 });
-
-function tastendruck() {
-
-  let myPlayerRole = (myPlayerIndex + myPlayerIndexOffset) % 4;
-
-  if (running == true) {
-
-
-    if (keyIsDown(38)) {
-
-      if (myPlayerRole == 0) {
-        socket.emit('serverEvent', "Racket1Up")
-
-        if (ballStickRight == true) {
-          socket.emit('serverEvent', "BallUp")
-        }
-      }
-      if (myPlayerRole == 1) {
-        socket.emit('serverEvent', "Racket2Up")
-
-        if (ballStickLeft == true) {
-          socket.emit('serverEvent', "BallUp")
-        }
-      }
-      if (myPlayerRole == 2) {
-        socket.emit('serverEvent', "Pig1Up")
-      }
-      if (myPlayerRole == 3) {
-        socket.emit('serverEvent', "Pig2Up")
-      }
-
-
-    } else if (keyIsDown(40)) {
-
-      if (myPlayerRole == 0) {
-        socket.emit('serverEvent', "Racket1Down")
-
-        if (ballStickRight == true) {
-          socket.emit('serverEvent', "BallDown")
-        }
-      }
-      if (myPlayerRole == 1) {
-        socket.emit('serverEvent', "Racket2Down")
-
-        if (ballStickLeft == true) {
-          socket.emit('serverEvent', "BallDown")
-        }
-      }
-      if (myPlayerRole == 2) {
-        socket.emit('serverEvent', "Pig1Down")
-      }
-      if (myPlayerRole == 3) {
-        socket.emit('serverEvent', "Pig2Down")
-      }
-    }
-
-    if (keyIsDown(37)) {
-
-      if (myPlayerRole == 2) {
-        socket.emit('serverEvent', "Pig1Left")
-      }
-      if (myPlayerRole == 3) {
-        socket.emit('serverEvent', "Pig2Left")
-      }
-
-    } else if (keyIsDown(39)) {
-
-      if (myPlayerRole == 2) {
-        socket.emit('serverEvent', "Pig1Right")
-      }
-      if (myPlayerRole == 3) {
-        socket.emit('serverEvent', "Pig2Right")
-      }
-    }
-
-    if (keyIsDown(32)) {
-
-      if (myPlayerRole == 0 && ballStickRight == true) {
-
-        socket.emit('serverEvent', "PlayBall")
-
-      }
-
-      if (myPlayerRole == 1 && ballStickLeft == true) {
-
-        socket.emit('serverEvent', "PlayBall")
-
-      }
-    }
-
-
-  }
-
-  if (keyCode == 13) {
-    startGame();
-
-  }
-  // Deprecated code!
-  window.addEventListener("keydown", function (e) {
-    // space and arrow keys
-    if ([37, 38, 39, 40].indexOf(e.keyCode) > -1) {
-      e.preventDefault();
-    }
-  }, false);
-
-
-
-}
-socket.on('newUsersEvent', function (myID, myIndex, userList) {
-  console.log("New users event: ");
-  console.log("That's me: " + myID);
-  console.log("My index in the list: " + myIndex);
-  console.log("That's the new users: ");
-  console.log(userList);
-
-  playerCount = userList.length;
-  myPlayerIndex = myIndex;
-
-  // updateStatus();
-
-  // function updateStatus() {
-
-  // }
-
-});
-
-
-// Click to start
-
-function startGame() {
-  socket.emit('serverEvent', "reset");
-}
-
-function restart() {
-  score = 0;
-  running = false;
-  runningBall = false;
-  ball.pos = { x: WIDTH / 2, y: HEIGHT / 2 };
-  pig1.x = WIDTH / 2
-  pig1.y = HEIGHT / 3
-  pig2.x = WIDTH / 2
-  pig2.y = (HEIGHT / 3) * 2
-  setTimeout(startAgain, 3000);
-  myPlayerIndexOffset +=2;
-
-}
-
-function startAgain() {
-  running = true;
-  runningBall = true;
-
-}
-
-function hold() {
-
-  runningBall = false;
-  stopScore = true;
-
-
-  if (ball.pos.x < WIDTH / 2) {
-
-    ballStickLeft = true;
-  }
-
-  if (ball.pos.x > WIDTH / 2) {
-
-    ballStickRight = true;
-  }
-
-}
-
-//create window boundaries/collisions
-function collision(){
-
-
-// Rackets 
-
-if(racket1.y < 0){      //over top of window
-
-racket1.y = racket1.y + racketSpeed;
-
-}
-
-if(racket1.y + racket1.h > HEIGHT){      //under bottom of window
-
-  racket1.y = racket1.y - racketSpeed;
-  
-}
-
-if(racket2.y < 0){      //over top of window
-
-  racket2.y = racket2.y + racketSpeed;
-    
-}
-    
-if(racket2.y + racket2.h > HEIGHT){      //under bottom of window
-    
-  racket2.y = racket2.y - racketSpeed;
-      
-}
-
-//Pigs
-
-
-//Pig1
-if(pig1.y < 0){      //over top of window
-
-  pig1.y = pig1.y + pigSpeed;
-  
-  }
-  
-  if(pig1.y + pig1.h/2 > HEIGHT){      //under bottom of window
-  
-    pig1.y = pig1.y - pigSpeed;
-    
-  }
-
-  if(pig1.x < 200){      //left out of window
-  
-    pig1.x = pig1.x + pigSpeed;
-      
-  }
-  
-  if(pig1.x > WIDTH - 200){      //right out of window
-  
-    pig1.x = pig1.x - pigSpeed;
-      
-  }
-
-  //Pig2
-  
-  if(pig2.y < 0){      //over top of window
-  
-    pig2.y = pig2.y + pigSpeed;
-      
-  }
-      
-  if(pig2.y + pig2.h/2 > HEIGHT){      //under bottom of window
-      
-    pig2.y = pig2.y - pigSpeed;
-        
-  }
-
-  if(pig2.x < 200){      //left out of window
-  
-    pig2.x = pig2.x + pigSpeed;
-      
-  }
-  
-  if(pig2.x > WIDTH - 200){      //right out of window
-  
-    pig2.x = pig2.x - pigSpeed;
-      
-  }
-
-  
-
-}
