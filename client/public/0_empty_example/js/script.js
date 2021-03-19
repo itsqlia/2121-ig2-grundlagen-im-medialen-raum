@@ -370,8 +370,8 @@ pop();
 push();
 stroke(50);
 strokeWeight(4);
-line(39,0,39,HEIGHT);
-line(WIDTH - 39,0,WIDTH- 39,HEIGHT);
+line(20,0,20,HEIGHT);
+line(WIDTH - 20,0,WIDTH- 20,HEIGHT);
 
 pop();
 
