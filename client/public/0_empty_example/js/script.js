@@ -371,25 +371,37 @@ function collision(){
 if(racket1.y < 0){      //over top of window
 
 racket1.y = racket1.y + racketSpeed;
+if (ballStickRight){
+  ball.pos.y = ball.pos.y + racketSpeed;
+}
 
 }
 
 if(racket1.y + racket1.h > HEIGHT){      //under bottom of window
 
   racket1.y = racket1.y - racketSpeed;
+  if (ballStickRight){
+    ball.pos.y = ball.pos.y - racketSpeed;
+  }
   
 }
 
 if(racket2.y < 0){      //over top of window
 
   racket2.y = racket2.y + racketSpeed;
-    
+  if (ballStickLeft){
+    ball.pos.y = ball.pos.y + racketSpeed;
+  }
+  
 }
     
 if(racket2.y + racket2.h > HEIGHT){      //under bottom of window
     
   racket2.y = racket2.y - racketSpeed;
-      
+  if (ballStickLeft){
+    ball.pos.y = ball.pos.y - racketSpeed;
+  }
+   
 }
 
 //Pigs
