@@ -226,10 +226,59 @@ class Pig {
   show() {
     fill(this.color)
     rect(this.x, this.y, this.w, this.h)
+
+     
+    blocks.forEach((block, i) => {
+      if (this.intersect(block)) {
+        
+
+        if((this.y + this.h / 2) > block.y) { //Pig über Block
+          this.y += pigSpeed
+          console.log("HALLO!")
+        }
+      
+       
+          if(this.y <(block.y + block.h)) { //Pig unter Block
+            this.y -= pigSpeed
+          }
+        
+        else if ((this.x + this.w / 2) > block.x){//Pig links von Block
+        this.x += pigSpeed;
+        }
+
+        else if (this.x < (block.x + block.w)){//Pig rechts von Block
+          this.x -= pigSpeed;
+          }
+        }
+      
+      
+    });
+    
+  }
+
+  intersect(obj) {
+    let left = Math.max(this.x - this.w / 2, obj.x)
+    let right = Math.min(this.x + this.w / 2, obj.x + obj.w)
+    let top = Math.max(this.y - this.h / 2, obj.y)
+    let bottom = Math.min(this.y + this.h / 2, obj.y + obj.h)
+    if (right >= left && bottom >= top) {
+      return {
+        x: left,
+        y: top,
+        w: right - left,
+        h: bottom - top
+      }
+    }
+
   }
 
 
-}
+  }
+
+  
+
+
+
 
 let pig1 = new Pig(WIDTH / 2, HEIGHT / 3, 50, 50, "pink")
 let pig2 = new Pig(WIDTH / 2, (HEIGHT / 3) * 2, 50, 50, "pink")
