@@ -157,22 +157,22 @@ class Ball {
       restart()
     }
 
-    // blocks.forEach((block, i) => {
-    //   if (this.hits(block)) {
-    //     if ((((this.pos.y + this.size / 2) == block.y) || // ball above obj
-    //         (this.pos.y == (block.y + block.h)))) {
-    //       this.move.y = -this.move.y;
-    //       this.color = color(Math.random() * 256, Math.random() * 256, Math.random() * 256)
+    blocks.forEach((block, i) => {
+      if (this.intersect(block)) {
+        if ((((this.pos.y + this.size / 2) == block.y) || // ball above obj
+            (this.pos.y == (block.y + block.h)))) {
+          this.move.y = -this.move.y;
+          this.color = color(Math.random() * 256, Math.random() * 256, Math.random() * 256)
     
     
-    //     } else if ((((this.pos.x + this.size / 2) == block.x) || // ball left of obj
-    //         (this.pos.x == (block.x + block.w)))) {
-    //       this.color = color(Math.random() * 256, Math.random() * 256, Math.random() * 256)
-    //       this.move.x = -this.move.x;
+        } else if ((((this.pos.x + this.size / 2) == block.x) || // ball left of obj
+            (this.pos.x == (block.x + block.w)))) {
+          this.color = color(Math.random() * 256, Math.random() * 256, Math.random() * 256)
+          this.move.x = -this.move.x;
     
-    //     }
-    //     }
-    // });
+        }
+        }
+    });
 
 
     
