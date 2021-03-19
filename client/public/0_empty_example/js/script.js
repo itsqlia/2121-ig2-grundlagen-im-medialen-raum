@@ -1,4 +1,5 @@
-// Connecting to server. Don't touch this :-) 
+// Connecting to server. Don't touch this :-)
+//hallo 
 let socket = io();
 
 
