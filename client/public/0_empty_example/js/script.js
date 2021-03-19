@@ -44,7 +44,7 @@ let barrierLongSide = 150;
 let barrierShortSide = 50;
 
 function preload() {
-  background = loadImage('assets/background.jpg');
+  backgroundImg = loadImage('assets/background.jpg');
   ballImg = loadImage('assets/ball.png');
   barrier1Img = loadImage('assets/barrier1.png');
   barrier2Img = loadImage('assets/barrier2.png');
@@ -238,7 +238,7 @@ class Pig {
 
   show() {
     fill(this.color)
-    rect(this.x, this.y, this.w, this.h)
+    rect(this.x, this.y, this.w, this.h,50)
 
      
     blocks.forEach((block, i) => {
@@ -311,8 +311,9 @@ function setup() {
 
 function draw() {
 
- 
-  image(background, 0,0,1920,1080);
+  background("black");
+
+  // image(backgroundImg, 0,0,1920,1080);
 
 
   collision();
@@ -365,6 +366,14 @@ pop();
   racket2.x = 0;
   tastendruck();
 
+
+push();
+stroke(50);
+strokeWeight(4);
+line(39,0,39,HEIGHT);
+line(WIDTH - 39,0,WIDTH- 39,HEIGHT);
+
+pop();
 
   //Bilder
   
