@@ -6,7 +6,8 @@ let blocks = []
 let balls = []
 let collisions = []
 let layers = []
-let ballVelocity = 10
+let ballVelocityX = 10
+let ballVelocityY = 10
 
 socket.on('connected', function (msg) {
   console.log(msg);
@@ -139,7 +140,14 @@ blocks.push(new Block('rect',{ x: WIDTH + 10, y: HEIGHT +10 , w: 20, h: 4000, co
         collisions.push({ hit: bodyBlock.plugin.block, ball: bodyBall })
 
         
-        ballVelocity =-ballVelocity;
+      
+        if (ball.position.x < 0|| ball.position.x > WIDTH - ball.circleRadius / 2) {
+          ballVelocityX = - ballVelocityX
+        }
+        if (ball.position.y < ball.circleRadius / 2 || ball.position.y > HEIGHT - ball.circleRadius / 2) {
+          ballVelocityY = - ballVelocityY
+        }
+      
        
 
       }
@@ -184,10 +192,12 @@ function setup() {
 
 function draw() {
 
+
+
   background(50);
 
   if (running && runningBall) {
-    Matter.Body.setVelocity(ball, {x:ballVelocity,y:ballVelocity});
+    Matter.Body.setVelocity(ball, {x:ballVelocityX,y:ballVelocityY});
     
   }
 
