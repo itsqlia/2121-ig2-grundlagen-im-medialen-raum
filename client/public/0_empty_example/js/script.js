@@ -40,8 +40,8 @@ let blocks = [];
 
 
 //barrier
-let barrierLongSide = 300; 
-let barrierShortSide = 100;
+let barrierLongSide = 150; 
+let barrierShortSide = 50;
 
 
 class Block {
@@ -64,8 +64,18 @@ class Block {
 }
 let racket1 = new Block(50, HEIGHT / 2, 40, 150, "cyan"); blocks.push(racket1)
 let racket2 = new Block(50, HEIGHT / 2, 40, 150, "cyan"); blocks.push(racket2)
-
+//oben links
 let barrier1 = new Block(WIDTH/4, HEIGHT/4, barrierLongSide, barrierShortSide, "black"); blocks.push(barrier1)
+let barrier2 = new Block(WIDTH/4+150, HEIGHT/4-100, barrierShortSide, barrierLongSide, "black"); blocks.push(barrier2)
+//oben rechts
+let barrier3 = new Block(WIDTH/4*3-150, HEIGHT/4, barrierLongSide, barrierShortSide, "black"); blocks.push(barrier3)
+let barrier4 = new Block(WIDTH/4*3-200, HEIGHT/4-100, barrierShortSide, barrierLongSide, "black"); blocks.push(barrier4)
+//unten rechts
+let barrier5 = new Block(WIDTH/4*3-150, HEIGHT/4*3-100, barrierLongSide, barrierShortSide, "black"); blocks.push(barrier5)
+let barrier6 = new Block(WIDTH/4*3-200, HEIGHT/4*3-100, barrierShortSide, barrierLongSide, "black"); blocks.push(barrier6)
+//unten links
+let barrier7 = new Block(WIDTH/4, HEIGHT/4*3-100, barrierLongSide, barrierShortSide, "black"); blocks.push(barrier7)
+let barrier8 = new Block(WIDTH/4+150, HEIGHT/4*3-100, barrierShortSide, barrierLongSide, "black"); blocks.push(barrier8)
 
 // OOP final
 class Ball {
@@ -76,7 +86,7 @@ class Ball {
     this.size = size
     this.move = {
       x: 10,
-      y: 10
+      y: 4
     }
   }
 
