@@ -122,7 +122,7 @@ blocks.push(new Block('rect',{ x: WIDTH + 10, y: HEIGHT +10 , w: 20, h: 4000, co
 
   // Process collisions - check whether ball hits a Block object
   Matter.Events.on(engine, 'collisionStart', function(event) {
-    var pairs = event.pairs
+    let pairs = event.pairs
     pairs.forEach((pair, i) => {
       if (balls.includes(pair.bodyA)) {
         collide(pair.bodyB, pair.bodyA)

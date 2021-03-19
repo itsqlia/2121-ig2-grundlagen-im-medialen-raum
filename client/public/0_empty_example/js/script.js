@@ -33,6 +33,7 @@ let ballStickLeft = false;
 let ballStickRight = false;
 
 let pigSpeed = 7;
+let racketSpeed = 13;
 
 
 class Block {
@@ -215,6 +216,9 @@ function draw() {
   // rect(0,0,40,1080);
   // rect(1880,0,40,1080);
   // pop();
+
+  collision();
+
 
   if (myPlayerIndex == 0) {
 
@@ -539,5 +543,93 @@ function hold() {
 
     ballStickRight = true;
   }
+
+}
+
+//create window boundaries/collisions
+function collision(){
+
+
+// Rackets 
+
+if(racket1.y < 0){      //over top of window
+
+racket1.y = racket1.y + racketSpeed;
+
+}
+
+if(racket1.y + racket1.h > HEIGHT){      //under bottom of window
+
+  racket1.y = racket1.y - racketSpeed;
+  
+}
+
+if(racket2.y < 0){      //over top of window
+
+  racket2.y = racket2.y + racketSpeed;
+    
+}
+    
+if(racket2.y + racket2.h > HEIGHT){      //under bottom of window
+    
+  racket2.y = racket2.y - racketSpeed;
+      
+}
+
+//Pigs
+
+
+//Pig1
+if(pig1.y < 0){      //over top of window
+
+  pig1.y = pig1.y + pigSpeed;
+  
+  }
+  
+  if(pig1.y + pig1.h/2 > HEIGHT){      //under bottom of window
+  
+    pig1.y = pig1.y - pigSpeed;
+    
+  }
+
+  if(pig1.x < 200){      //left out of window
+  
+    pig1.x = pig1.x + pigSpeed;
+      
+  }
+  
+  if(pig1.x > WIDTH - 200){      //right out of window
+  
+    pig1.x = pig1.x - pigSpeed;
+      
+  }
+
+  //Pig2
+  
+  if(pig2.y < 0){      //over top of window
+  
+    pig2.y = pig2.y + pigSpeed;
+      
+  }
+      
+  if(pig2.y + pig2.h/2 > HEIGHT){      //under bottom of window
+      
+    pig2.y = pig2.y - pigSpeed;
+        
+  }
+
+  if(pig2.x < 200){      //left out of window
+  
+    pig2.x = pig2.x + pigSpeed;
+      
+  }
+  
+  if(pig2.x > WIDTH - 200){      //right out of window
+  
+    pig2.x = pig2.x - pigSpeed;
+      
+  }
+
+  
 
 }
