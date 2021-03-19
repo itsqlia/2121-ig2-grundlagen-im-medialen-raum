@@ -232,22 +232,23 @@ class Pig {
       if (this.intersect(block)) {
         
 
-        if((this.y + this.h / 2) > block.y) { //Pig über Block
-          this.y += pigSpeed
-          console.log("HALLO!")
+        if((this.y + this.h / 2) > block.y && (this.y + this.h / 2) < block.y + 20 ) { //Pig über Block
+          this.y -= pigSpeed
+          
         }
       
        
-          if(this.y <(block.y + block.h)) { //Pig unter Block
-            this.y -= pigSpeed
+          if((this.y -this.h/2) < (block.y + block.h) && (this.y-(this.h/2) > (block.y + block.h)-20)) { //Pig unter Block
+            this.y += pigSpeed
+           
           }
         
-        else if ((this.x + this.w / 2) > block.x){//Pig links von Block
-        this.x += pigSpeed;
+        else if (((this.x + this.w / 2) > block.x)&&(this.x + this.w / 2) < block.x +20 ){//Pig links von Block
+        this.x -= pigSpeed;
         }
 
-        else if (this.x < (block.x + block.w)){//Pig rechts von Block
-          this.x -= pigSpeed;
+        else if (((this.x - this.w/2) < (block.x + block.w))&&((this.x - this.w/2) <(block.x + block.w)-10)){//Pig rechts von Block
+          this.x += pigSpeed;
           }
         }
       
