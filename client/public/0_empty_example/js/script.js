@@ -43,6 +43,19 @@ let blocks = [];
 let barrierLongSide = 150; 
 let barrierShortSide = 50;
 
+function preload() {
+  background = loadImage('assets/background.jpg');
+  ballImg = loadImage('assets/ball.png');
+  barrier1Img = loadImage('assets/barrier1.png');
+  barrier2Img = loadImage('assets/barrier2.png');
+  barrier3Img = loadImage('assets/barrier3.png');
+  barrier4Img = loadImage('assets/barrier4.png');
+  racketImg = loadImage('assets/racket.png');
+  pigImg = loadImage('assets/pig.png')
+
+}
+
+
 
 class Block {
   constructor(x, y, w, h, color) {
@@ -281,8 +294,8 @@ class Pig {
 
 
 
-let pig1 = new Pig(WIDTH / 2, HEIGHT / 3, 50, 50, "pink")
-let pig2 = new Pig(WIDTH / 2, (HEIGHT / 3) * 2, 50, 50, "pink")
+let pig1 = new Pig(WIDTH / 2, HEIGHT / 3, 50, 50, (0,0,0,0))
+let pig2 = new Pig(WIDTH / 2, (HEIGHT / 3) * 2, 50, 50, (0,0,0,0))
 
 
 
@@ -298,7 +311,8 @@ function setup() {
 
 function draw() {
 
-  background(50);
+ 
+  image(background, 0,0,1920,1080);
 
 
   collision();
@@ -313,13 +327,13 @@ function draw() {
   fill("white");
   textAlign(CENTER);
   textSize(30);
-  text("Score  " + score, WIDTH / 2, 50)
+  text("SCORE  " + score, WIDTH / 2, 50)
 
 push();
-  fill("red");
+  fill(255,205,55);
   textAlign(CENTER);
   textSize(30);
-  text("High Score  " + highScore, WIDTH / 2, 90)
+  text("HIGH SCORE  " + highScore, WIDTH / 2, 90)
 pop();
 
 
@@ -327,7 +341,7 @@ pop();
     fill("white")
     textSize(36);
     textAlign(CENTER);
-    text("Press 'Enter' to Start!", WIDTH / 2, HEIGHT / 6)
+    text("Press  ENTER  to Start!", WIDTH / 2, HEIGHT / 6)
   }
 
   ball.show()
@@ -350,6 +364,23 @@ pop();
   racket1.x = WIDTH - 40;
   racket2.x = 0;
   tastendruck();
+
+
+  //Bilder
+  
+  image(ballImg, ball.pos.x - 35, ball.pos.y - 35, 70, 70);
+  image(racketImg, racket1.x-46, racket1.y-40,130,230);
+  image(racketImg, racket2.x-46, racket2.y-40,130,230);
+  image(pigImg,pig1.x-65,pig1.y-65,130,130);
+  image(pigImg,pig2.x-65,pig2.y-65,130,130);
+  image(barrier1Img,barrier1.x-40,barrier1.y-140,280,230);
+  image(barrier2Img,barrier3.x-90,barrier3.y-140,280,230);
+  image(barrier3Img,barrier5.x-90,barrier5.y-40,280,230);
+  image(barrier4Img,barrier7.x-40,barrier7.y-40,280,230);
+
+
+
+
 
 }
 
