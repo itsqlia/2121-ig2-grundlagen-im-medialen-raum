@@ -35,6 +35,13 @@ let ballStickRight = false;
 let pigSpeed = 7;
 let racketSpeed = 13;
 
+let blocks = [];
+
+
+//barrier
+let barrierLongSide = 300; 
+let barrierShortSide = 100;
+
 
 class Block {
   constructor(x, y, w, h, color) {
@@ -54,8 +61,10 @@ class Block {
 
 
 }
-let racket1 = new Block(50, HEIGHT / 2, 40, 150, "cyan")
-let racket2 = new Block(50, HEIGHT / 2, 40, 150, "cyan")
+let racket1 = new Block(50, HEIGHT / 2, 40, 150, "cyan"); blocks.push(racket1)
+let racket2 = new Block(50, HEIGHT / 2, 40, 150, "cyan"); blocks.push(racket2)
+
+let barrier1 = new Block(WIDTH/4, HEIGHT/4, barrierLongSide, barrierShortSide, "black"); blocks.push(barrier1)
 
 // OOP final
 class Ball {
@@ -129,6 +138,9 @@ class Ball {
         }
 
       }
+
+      
+      
       hold();
       this.move.x = -this.move.x;
       this.color = color(Math.random() * 256, Math.random() * 256, Math.random() * 256)
@@ -145,10 +157,27 @@ class Ball {
       restart()
     }
 
+    // blocks.forEach((block, i) => {
+    //   if (this.hits(block)) {
+    //     if ((((this.pos.y + this.size / 2) == block.y) || // ball above obj
+    //         (this.pos.y == (block.y + block.h)))) {
+    //       this.move.y = -this.move.y;
+    //       this.color = color(Math.random() * 256, Math.random() * 256, Math.random() * 256)
+    
+    
+    //     } else if ((((this.pos.x + this.size / 2) == block.x) || // ball left of obj
+    //         (this.pos.x == (block.x + block.w)))) {
+    //       this.color = color(Math.random() * 256, Math.random() * 256, Math.random() * 256)
+    //       this.move.x = -this.move.x;
+    
+    //     }
+    //     }
+    // });
+
+
+    
+      
   }
-
-
-
 
 
   intersect(obj) {
@@ -201,7 +230,7 @@ function setup() {
   createCanvas(WIDTH, HEIGHT)
   let c = color(Math.random() * 256, Math.random() * 256, Math.random() * 256);
   fill(c);
-
+  frameRate(20);
 
 
 }
@@ -242,8 +271,13 @@ pop();
 
   ball.show()
   step = false
-  racket1.show()
-  racket2.show()
+  // racket1.show()
+  // racket2.show()
+
+  blocks.forEach((block, i) => {
+    block.show()
+  });
+
 
   push();
   rectMode(CENTER);
