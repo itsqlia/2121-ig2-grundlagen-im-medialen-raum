@@ -141,10 +141,10 @@ blocks.push(new Block('rect',{ x: WIDTH + 10, y: HEIGHT +10 , w: 20, h: 4000, co
 
         
       
-        if (ball.position.x < 0|| ball.position.x > WIDTH - ball.circleRadius / 2) {
+        if (ball.position.x < 0|| ball.position.x > WIDTH - ball.circleRadius) {
           ballVelocityX = - ballVelocityX
         }
-        if (ball.position.y < ball.circleRadius / 2 || ball.position.y > HEIGHT - ball.circleRadius / 2) {
+        if (ball.position.y < ball.circleRadius|| ball.position.y > HEIGHT - ball.circleRadius) {
           ballVelocityY = - ballVelocityY
         }
       
