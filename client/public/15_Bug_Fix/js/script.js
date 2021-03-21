@@ -13,7 +13,7 @@ let myPlayerIndexOffset = 0;
 let playerCount = 0;
 let HEIGHT = 1080;
 let WIDTH = 1920;
-let MOUSEX;
+
 let step = false
 let bounce = false
 
@@ -71,12 +71,13 @@ class Block {
     rect(this.x, this.y, this.w, this.h)
   }
 
-
+   
 
 
 }
 let racket1 = new Block(50, HEIGHT / 2, 40, 150, "cyan"); blocks.push(racket1)
 let racket2 = new Block(50, HEIGHT / 2, 40, 150, "cyan"); blocks.push(racket2)
+
 //oben links
 let barrier1 = new Block(WIDTH/4, HEIGHT/4, barrierLongSide, barrierShortSide, "black"); blocks.push(barrier1)
 let barrier2 = new Block(WIDTH/4+150, HEIGHT/4-100, barrierShortSide, barrierLongSide, "black"); blocks.push(barrier2)
@@ -113,6 +114,8 @@ class Ball {
       this.pos.x = this.pos.x + this.move.x
       this.pos.y = this.pos.y + this.move.y
     }
+
+    // collision with wall
     if (this.pos.x < 35|| this.pos.x > (WIDTH-35) - this.size / 2) {
       this.move.x = -this.move.x
     }
@@ -181,29 +184,53 @@ class Ball {
       restart()
     }
 
+    //Ball hits Block
+
     blocks.forEach((block, i) => {
       if (this.intersect(block)) {
-        console.log("Block " + i + " intersected");
-        if ((((this.pos.y + this.size / 2) == block.y) || // ball above obj
-            (this.pos.y == (block.y + block.h)))) {
-          this.move.y = -this.move.y;
-          this.color = color(Math.random() * 256, Math.random() * 256, Math.random() * 256)
-    
-    
-        } else if ((((this.pos.x + this.size / 2) == block.x) || // ball left of obj
-            (this.pos.x == (block.x + block.w)))) {
-          this.color = color(Math.random() * 256, Math.random() * 256, Math.random() * 256)
-          this.move.x = -this.move.x;
-    
+        
+
+        if((this.pos.y + this.size / 2) > block.y && (this.pos.y + this.size / 2) < block.y + 20  && block.x < (this.pos.x + this.size/2) < (block.x + block.w)) { //Ball über Block
+          this.pos.y = this.pos.y - 6
+          this.move.y =- this.move.y
+          
+          console.log("von oben")
+          
         }
+          if((this.pos.y -this.size/2) < (block.y + block.h) && (this.pos.y-(this.size/2) > (block.y + block.h)-20) && block.x < (this.pos.x - this.size/2) < (block.x + block.w)) { //Ball unter Block
+            this.pos.y = this.pos.y +6
+            this.move.y =- this.move.y
+            
+            console.log("von unten")
+
+          }
+        
+        else if (((this.pos.x + this.size / 2) > block.x)&&(this.pos.x + this.size / 2) < block.x +20 && block.y < (this.pos.y + this.size/2) < (block.y + block.h)){//Ball links von Block
+        this.pos.x = this.pos.x - 6
+        this.move.x =- this.move.x
+        
+        console.log("von links")
+
         }
+
+        else if (((this.pos.x - this.size/2) < (block.x + block.w))&&((this.pos.x - this.size/2) <(block.x + block.w)-20) && block.y < (this.pos.y + this.size/2) < (block.y + block.h)){//Ball rechts von Block
+          this.pos.x = this.pos.x + 6
+          this.move.x =- this.move.x
+          
+          console.log("von rechts")
+
+          }
+        }
+ 
+      
     });
+
 
 
     
       
   }
-
+  //Ball hits Racket
 
   intersect(obj) {
     let left = Math.max(this.pos.x - this.size / 2, obj.x)
@@ -225,7 +252,7 @@ class Ball {
 let ball = new Ball({
   x: WIDTH / 2,
   y: HEIGHT / 2
-}, 'red', 20)
+}, 'black', 20)
 
 
 class Pig {
@@ -241,28 +268,26 @@ class Pig {
     fill(this.color)
     rect(this.x, this.y, this.w, this.h,50)
 
-     
+     //collision Pig
     blocks.forEach((block, i) => {
       if (this.intersect(block)) {
         
 
-        if((this.y + this.h / 2) > block.y && (this.y + this.h / 2) < block.y + 20 ) { //Pig über Block
-          this.y -= pigSpeed
-          
+        if((this.y + this.h / 2) > block.y && (this.y + this.h / 2) < block.y + 50 ) { //Pig über Block
+          this.y = this.y - 20
         }
-      
-       
-          if((this.y -this.h/2) < (block.y + block.h) && (this.y-(this.h/2) > (block.y + block.h)-20)) { //Pig unter Block
-            this.y += pigSpeed
+
+          if((this.y -this.h/2) < (block.y + block.h) && (this.y-(this.h/2) > (block.y + block.h)-50)) { //Pig unter Block
+            this.y = this.y +20
            
           }
         
-        else if (((this.x + this.w / 2) > block.x)&&(this.x + this.w / 2) < block.x +20 ){//Pig links von Block
-        this.x -= pigSpeed;
+        else if (((this.x + this.w / 2) > block.x)&&(this.x + this.w / 2) < block.x +50 ){//Pig links von Block
+        this.x = this.x - 20
         }
 
-        else if (((this.x - this.w/2) < (block.x + block.w))&&((this.x - this.w/2) <(block.x + block.w)-10)){//Pig rechts von Block
-          this.x += pigSpeed;
+        else if (((this.x - this.w/2) < (block.x + block.w))&&((this.x - this.w/2) <(block.x + block.w)+50)){//Pig rechts von Block
+          this.x = this.x + 20
           }
         }
       
@@ -314,7 +339,7 @@ function draw() {
 
   background("black");
 
-  // image(backgroundImg, 0,0,1920,1080);
+   //image(backgroundImg, 0,0,1920,1080);
 
 
   collision();
@@ -501,25 +526,25 @@ if(racket2.y + racket2.h > HEIGHT){      //under bottom of window
 //Pig1
 if(pig1.y - pig1.h/2 < 0){      //over top of window
 
-  pig1.y = pig1.y + pigSpeed;
+  pig1.y = pig1.y + 10;
   
   }
   
   if(pig1.y + pig1.h/2 > HEIGHT){      //under bottom of window
   
-    pig1.y = pig1.y - pigSpeed;
+    pig1.y = pig1.y - 10;
     
   }
 
   if(pig1.x < 200){      //left out of window
   
-    pig1.x = pig1.x + pigSpeed;
+    pig1.x = pig1.x + 10;
       
   }
   
   if(pig1.x > WIDTH - 200){      //right out of window
   
-    pig1.x = pig1.x - pigSpeed;
+    pig1.x = pig1.x - 10;
       
   }
 
@@ -527,25 +552,25 @@ if(pig1.y - pig1.h/2 < 0){      //over top of window
   
   if(pig2.y - pig2.h/2 < 0){      //over top of window
   
-    pig2.y = pig2.y + pigSpeed;
+    pig2.y = pig2.y + 10;
       
   }
       
   if(pig2.y + pig2.h/2 > HEIGHT){      //under bottom of window
       
-    pig2.y = pig2.y - pigSpeed;
+    pig2.y = pig2.y - 10;
         
   }
 
   if(pig2.x < 200){      //left out of window
   
-    pig2.x = pig2.x + pigSpeed;
+    pig2.x = pig2.x + 10;
       
   }
   
   if(pig2.x > WIDTH - 200){      //right out of window
   
-    pig2.x = pig2.x - pigSpeed;
+    pig2.x = pig2.x - 10;
       
   }
 
