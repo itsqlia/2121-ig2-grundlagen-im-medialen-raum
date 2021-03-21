@@ -43,6 +43,10 @@ let racketSpeed = 13;
 
 let blocks = [];
 
+let pig1Hit = false;
+let pig2Hit = false;
+
+
 
 //barrier
 let barrierLongSide = 150; 
@@ -239,12 +243,12 @@ class Ball {
 
     if (this.intersect(pig1)) {
 
-      restart()
+      restartPig1()
     }
 
     if (this.intersect(pig2)) {
 
-      restart()
+      restartPig2()
     }
 
     // blocks.forEach((block, i) => {
@@ -390,6 +394,12 @@ function draw() {
 
   collision();
 
+  if(pig1Hit == true && pig2Hit && true){
+
+    myPlayerIndexOffset +=2;
+
+  }
+
 
   if (myPlayerIndex == 0 && running) {
 
@@ -488,27 +498,31 @@ function startGame() {
   socket.emit('serverEvent', "reset");
 }
 
-function restart() {
-  score = 0;
-  running = false;
-  runningBall = false;
-  runningBall2 = false;
-  ball.pos = { x: WIDTH / 4, y: HEIGHT / 2 };
-  ball2.pos = { x: WIDTH / 4*3, y: HEIGHT / 2 };
-  pig1.x = WIDTH / 2
-  pig1.y = HEIGHT / 3
-  pig2.x = WIDTH / 2
-  pig2.y = (HEIGHT / 3) * 2
-  setTimeout(startAgain, 3000);
-  myPlayerIndexOffset +=2;
-
+function restartPig1() {
+  
+  pig1Hit = true
+  pig1.x = 3000
+  setTimeout(respawnPig1, 15000);
+  
 }
 
-function startAgain() {
-  running = true;
-  runningBall = true;
-  runningBall2 = true;
+function respawnPig1() {
+  pig1Hit = false
+  pig1.x = WIDTH/2
+  pig1.y = 900
+}
 
+function restartPig2() {
+  pig2Hit = true
+  pig2.x = 3100
+  setTimeout(respawnPig2, 15000);
+  
+}
+
+function respawnPig1() {
+  pig2Hit = false
+  pig1.x = WIDTH/2
+  pig1.y = 900
 }
 
 function holdBall() {
@@ -958,3 +972,23 @@ socket.on('serverEvent', function (message) {
   }
 
 });
+
+function restart() {   
+  
+  running = false;   
+  runningBall = false;
+  runningBall2 = false;   
+  ball.pos = { x: WIDTH / 4, y: HEIGHT / 2 }; 
+  ball2.pos = { x: WIDTH / 4*3, y: HEIGHT / 2 };  
+  pig1.x = WIDTH / 2   
+  pig1.y = HEIGHT / 3   
+  pig2.x = WIDTH / 2   
+  pig2.y = (HEIGHT / 3) * 2   
+  setTimeout(startAgain, 3000);
+  }
+
+  function startAgain() {   
+    running = true;   
+    runningBall = true;  
+    runningBall2 = true;
+  }
