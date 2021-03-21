@@ -173,12 +173,12 @@ class Ball {
 
     if (this.intersect(pig1)) {
 
-      restart()
+      restartPig1()
     }
 
     if (this.intersect(pig2)) {
 
-      restart()
+      restartPig2()
     }
 
     blocks.forEach((block, i) => {
